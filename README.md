@@ -24,7 +24,7 @@ All content lives in `scripts/data.js`. Change the copy there, not in `index.htm
 
 `scripts/book.js` builds the book out of the `.page` sections in `index.html`. Leaf k carries page 2k on its front and page 2k+1 on its back, so turning one sheet swaps both halves of the spread the way paper does. The reading order is cover, then origin facing the first project, and so on to the arsenal facing the letters page.
 
-It never hijacks scrolling: `.book__rail` provides one screen of real scroll height per turn, and the controller only maps scroll position onto a `--turn` value per leaf that CSS reads. The scrollbar, keyboard, trackpad, and touch all behave normally. In page anchors are translated to the spread that holds them, since a fixed leaf has nothing for a `#hash` to scroll to.
+It never hijacks scrolling: `.book__rail` provides one screen of real scroll height per turn, and the controller only maps scroll position onto a `--turn` value per leaf that CSS reads. Scroll sets a target and the rendered value chases it each frame rather than tracking raw scroll, so a chunky wheel notch does not step the sheet over in visible jumps. The damping is against elapsed time, not frame count, so the book feels the same on a 120Hz screen as on a 60Hz one. The scrollbar, keyboard, trackpad, and touch all behave normally. In page anchors are translated to the spread that holds them, since a fixed leaf has nothing for a `#hash` to scroll to.
 
 Everything on a page is sized in `--pu`, one hundredth of a page height, so the spread scales as one piece at any window size instead of being tuned for one and cramped at the rest.
 

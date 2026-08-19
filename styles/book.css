@@ -82,6 +82,21 @@
 .fx-book .spread__base--left  { inset-inline-start: 0; opacity: var(--open, 1); }
 .fx-book .spread__base--right { inset-inline-start: var(--page-w); }
 
+/* the shadow the lifted leaf casts across the page it is revealing */
+.fx-book .spread__cast {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--page-w);
+  inline-size: var(--page-w);
+  z-index: 90;
+  pointer-events: none;
+  opacity: calc(var(--cast, 0) * 0.5);
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--ink) 62%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 24%, transparent) 34%,
+    transparent 74%);
+}
+
 /* ============ the leaf ============ */
 .fx-book .leaf {
   display: block;
@@ -90,12 +105,21 @@
   inset-inline-start: var(--page-w);
   inline-size: var(--page-w);
   block-size: 100%;
+  /* peaks at 1 halfway through the turn and returns to 0 at either end */
+  --flex: calc(var(--turn, 0) * (1 - var(--turn, 0)) * 4);
   transform-origin: left center;
-  transform: rotateY(calc(var(--turn, 0) * -180deg));
+  /* a sheet does not pivot as a flat plane: it lifts off the book and flexes
+     as it goes over, then lies back down */
+  transform:
+    translate3d(0, 0, calc(var(--flex) * 30px))
+    rotateY(calc(var(--turn, 0) * -180deg))
+    scaleY(calc(1 + var(--flex) * 0.018));
   transform-style: preserve-3d;
   pointer-events: none;
 }
 
+/* promoted for the whole turn, not toggled per frame, so the compositor is
+   never asked to build and throw away a layer mid animation */
 .fx-book .leaf.is-turning { will-change: transform; }
 
 /* both printed sides of one sheet */
@@ -143,7 +167,7 @@
   z-index: 29;
   pointer-events: none;
   background-color: var(--ink);
-  opacity: calc(var(--turn, 0) * (1 - var(--turn, 0)) * 4 * 0.3);
+  opacity: calc(var(--flex) * 0.3);
 }
 
 /* ============ the page inside a face ============ */

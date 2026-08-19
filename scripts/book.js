@@ -42,8 +42,12 @@
     var baseR = document.createElement('div');
     baseR.className = 'spread__base spread__base--right';
     baseR.setAttribute('aria-hidden', 'true');
+    var cast = document.createElement('div');
+    cast.className = 'spread__cast';
+    cast.setAttribute('aria-hidden', 'true');
     spread.appendChild(baseL);
     spread.appendChild(baseR);
+    spread.appendChild(cast);
 
     var leafCount = Math.ceil(pages.length / 2);
     for (var k = 0; k < leafCount; k++) {
@@ -59,7 +63,7 @@
       leaf.appendChild(front);
       leaf.appendChild(back);
       spread.appendChild(leaf);
-      leaves.push({ el: leaf, front: front, back: back });
+      leaves.push({ el: leaf, front: front, back: back, z: null, moving: false });
     }
 
     /* page 2k to the front of leaf k, page 2k+1 to its back */
@@ -125,39 +129,111 @@
     }
   }
 
-  /* ---------- turn ---------- */
+  /* ---------- turn ----------
+     The leaf never reads raw scroll. A wheel notch arrives as one large jump,
+     and mapping that straight onto the rotation makes the sheet snap over in
+     visible steps. Instead scroll sets a target and the rendered value chases
+     it every frame, so the paper carries its own momentum and settles. */
 
-  function write() {
-    frame = 0;
-    if (!enabled) return;
+  var current = 0;
+  var target = 0;
+  var running = false;
+  var last = 0;
+  var CHASE = 0.17;      /* fraction of the remaining gap closed per 60Hz frame */
+  var SETTLED = 0.0006;  /* close enough to stop the loop */
+
+  function readTarget() {
     var h = window.innerHeight || 1;
-    var progress = (window.pageYOffset || root.scrollTop || 0) / h;
+    target = (window.pageYOffset || root.scrollTop || 0) / h;
+  }
+
+  /* smoothstep: the leaf eases off the spine and settles rather than
+     rotating at a constant rate the whole way over */
+  function ease(t) { return t * t * (3 - 2 * t); }
+
+  function render() {
+    if (!enabled) return;
+    var lift = 0;
 
     for (var k = 0; k < leaves.length; k++) {
-      var t = clamp01(progress - k);
+      var raw = clamp01(current - k);
+      var t = ease(raw);
       var leaf = leaves[k];
+      var moving = raw > 0.0005 && raw < 0.9995;
+
       leaf.el.style.setProperty('--turn', t.toFixed(4));
+      if (moving) lift = Math.max(lift, 4 * raw * (1 - raw));
+
       /* unturned leaves stack with the cover on top, turned leaves stack in
          the order they landed, and whichever leaf is moving sits above both */
       var z;
-      if (t > 0 && t < 1) z = 500;
-      else if (t >= 1) z = 100 + k;
+      if (moving) z = 500;
+      else if (raw >= 1) z = 100 + k;
       else z = 50 - k;
-      leaf.el.style.zIndex = z;
-      leaf.el.classList.toggle('is-turning', t > 0 && t < 1);
+      if (leaf.z !== z) { leaf.el.style.zIndex = z; leaf.z = z; }
+      if (leaf.moving !== moving) {
+        leaf.el.classList.toggle('is-turning', moving);
+        leaf.moving = moving;
+      }
     }
 
     /* the closed book sits centred on its cover, then slides to a full spread */
-    spread.style.setProperty('--open', clamp01(progress).toFixed(4));
+    spread.style.setProperty('--open', ease(clamp01(current)).toFixed(4));
+    /* the raised leaf throws a shadow across the page it is uncovering */
+    spread.style.setProperty('--cast', lift.toFixed(4));
+  }
 
-    var s = Math.round(progress);
-    if (s < 0) s = 0;
-    if (s > turns) s = turns;
-    setSpread(s);
+  function tick(now) {
+    frame = 0;
+    if (!enabled) { running = false; return; }
+
+    /* Damp against elapsed time, not frame count. A fixed fraction per frame
+       would settle twice as fast on a 120Hz screen as on a 60Hz one, so the
+       book would feel different depending on the monitor. */
+    var dt = last ? Math.min(now - last, 64) : 16.67;
+    last = now;
+    var k = 1 - Math.pow(1 - CHASE, dt / 16.67);
+
+    var d = target - current;
+    if ((d < 0 ? -d : d) < SETTLED) {
+      current = target;
+      running = false;
+      last = 0;
+      render();
+      return;
+    }
+    current += d * k;
+    render();
+    frame = window.requestAnimationFrame(tick);
   }
 
   function queue() {
-    if (!frame && enabled) frame = window.requestAnimationFrame(write);
+    if (!enabled) return;
+    readTarget();
+
+    var s = Math.round(target);
+    if (s < 0) s = 0;
+    if (s > turns) s = turns;
+    setSpread(s);
+
+    if (!running) {
+      running = true;
+      last = 0;
+      frame = window.requestAnimationFrame(tick);
+    }
+  }
+
+  /* jump straight to the target with no chase, for first paint and resizes */
+  function write() {
+    if (!enabled) return;
+    readTarget();
+    current = target;
+    last = 0;
+    var s = Math.round(target);
+    if (s < 0) s = 0;
+    if (s > turns) s = turns;
+    setSpread(s);
+    render();
   }
 
   /* ---------- mode ---------- */
@@ -174,6 +250,8 @@
 
   function disable() {
     enabled = false;
+    running = false;
+    if (frame) { window.cancelAnimationFrame(frame); frame = 0; }
     root.classList.remove('fx-book');
     if (rail) rail.style.height = '';
     spreadIndex = -1;
@@ -182,8 +260,12 @@
       pages[i].removeAttribute('aria-hidden');
     }
     for (var k = 0; k < leaves.length; k++) {
-      leaves[k].el.style.zIndex = '';
-      leaves[k].el.style.removeProperty('--turn');
+      var leaf = leaves[k];
+      leaf.el.style.zIndex = '';
+      leaf.el.style.removeProperty('--turn');
+      leaf.el.classList.remove('is-turning');
+      leaf.z = null;
+      leaf.moving = false;
     }
   }
 
