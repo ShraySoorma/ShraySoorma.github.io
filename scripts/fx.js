@@ -245,6 +245,11 @@
     cursorDot = document.createElement("div");
     cursorDot.className = "ink-cursor";
     cursorDot.setAttribute("aria-hidden", "true");
+    cursorDot.innerHTML =
+      '<svg class="ink-cursor__arrow" viewBox="0 0 24 30" focusable="false">' +
+        '<path class="ink-cursor__plate" d="M2 1 L2 23 L8 17.5 L11.5 26 L15.5 24 L12 16 L20 15.5 Z"/>' +
+        '<path class="ink-cursor__blade" d="M2 1 L2 23 L8 17.5 L11.5 26 L15.5 24 L12 16 L20 15.5 Z"/>' +
+      '</svg>';
     document.body.appendChild(cursorTrail);
     document.body.appendChild(cursorDot);
     root.classList.add("fx-cursor");
@@ -259,7 +264,7 @@
     document.addEventListener("pointerover", function (e) {
       var t = e.target;
       var hit = (t && t.closest) ? t.closest("a, button, .btn, .panel, [data-cursor]") : null;
-      targetScale = hit ? 2.1 : 1;
+      targetScale = hit ? 1.3 : 1;
     }, { passive: true });
     document.addEventListener("pointerdown", function () { pressScale = 0.72; }, { passive: true });
     document.addEventListener("pointerup", function () { pressScale = 1; }, { passive: true });
@@ -267,11 +272,12 @@
       if (!cursorDot || !cursorTrail) return;
       dx += (tx - dx) * 0.42;
       dy += (ty - dy) * 0.42;
-      tlx += (tx - tlx) * 0.16;
-      tly += (ty - tly) * 0.16;
+      tlx += (tx - tlx) * 0.24;
+      tly += (ty - tly) * 0.24;
       scale += (targetScale * pressScale - scale) * 0.2;
       cursorDot.style.transform =
-        "translate3d(" + dx.toFixed(1) + "px," + dy.toFixed(1) + "px,0) scale(" + (1 + (scale - 1) * 0.3).toFixed(3) + ")";
+        "translate3d(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px,0) rotate(" +
+        ((dx - tx) * 0.45).toFixed(2) + "deg) scale(" + scale.toFixed(3) + ")";
       cursorTrail.style.transform =
         "translate3d(" + tlx.toFixed(1) + "px," + tly.toFixed(1) + "px,0) scale(" + scale.toFixed(3) + ")";
     });
