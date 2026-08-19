@@ -1,0 +1,142 @@
+/* Comic book pagination. Every rule here is gated behind .fx-book, which JS adds
+   only on wide, tall, motion-friendly viewports. Without it the pages fall back
+   to ordinary stacked sections, which is the vertical scrolling comic. */
+
+/* ============ fallback: plain flow ============ */
+.book__rail { display: none; }
+
+.page {
+  position: relative;
+  padding: var(--page-pad);
+}
+
+.page__back,
+.page__shade,
+.page__folio { display: none; }
+
+/* ============ book mode ============ */
+.fx-book {
+  scroll-snap-type: y mandatory;
+}
+
+.fx-book .book__stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  perspective: 3200px;
+  perspective-origin: 0% 50%;
+  pointer-events: none;
+}
+
+.fx-book .book__rail {
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+
+.fx-book .book__slot {
+  height: 100vh;
+  height: 100svh;
+  scroll-snap-align: start;
+}
+
+.fx-book .page {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--pages, 7) - var(--n, 0));
+  display: grid;
+  padding: 0;
+  overflow: hidden;
+  transform-origin: 0% 50%;
+  /* the leaf lifts off the spine and sweeps left. It fades out over the last
+     quarter of the turn, which is where a real page would be edge on and
+     unreadable anyway, and it keeps the sheet from parking off screen. */
+  transform:
+    translate3d(calc(var(--turn, 0) * -14%), 0, 0)
+    rotateY(calc(var(--turn, 0) * -105deg));
+  opacity: calc((0.98 - var(--turn, 0)) * 3.5);
+  background-color: var(--paper);
+  border-inline-start: var(--line-heavy) solid var(--ink);
+  box-shadow: 0 0 0 0 transparent;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.fx-book .page.is-current { pointer-events: auto; }
+
+/* a fully turned page must not eat clicks or paint over the next one */
+.fx-book .page[inert] { pointer-events: none; }
+
+/* the leaf fades before its reverse could face the reader, so the back face
+   is never needed, and opacity on the page would flatten preserve-3d anyway */
+.fx-book .page__back {
+  display: none;
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  background-color: var(--paper-deep);
+  background-image:
+    repeating-radial-gradient(circle at 50% 50%,
+      var(--dot-color-2) 0 calc(var(--dot-size) * 0.24),
+      transparent calc(var(--dot-size) * 0.24) calc(var(--dot-size) * 2));
+  background-size: calc(var(--dot-size) * 2.4) calc(var(--dot-size) * 2.4);
+  border-inline-end: var(--line-heavy) solid var(--ink);
+}
+
+/* curl shadow: the leaf darkens as it lifts off the spine */
+.fx-book .page__shade {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--ink) 55%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 12%, transparent) 28%,
+    transparent 62%);
+  opacity: calc(var(--turn, 0) * 0.85);
+}
+
+/* ============ page contents ============ */
+.fx-book .page__inner {
+  place-self: center;
+  inline-size: min(100%, 78rem);
+  max-block-size: 100svh;
+  padding: clamp(20px, 3.4vh, 52px) var(--page-pad);
+  overflow: hidden;
+}
+
+/* ============ folio ============ */
+.fx-book .page__folio {
+  display: block;
+  position: absolute;
+  inset-block-end: calc(var(--page-pad) * 0.45);
+  inset-inline-end: calc(var(--page-pad) * 0.6);
+  z-index: 15;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* the cover carries no folio, and the colophon only exists at the end */
+.fx-book #cover .page__folio { display: none; }
+
+.fx-book .colophon {
+  position: relative;
+  z-index: 3;
+  display: none;
+}
+
+/* ============ mid turn: the page underneath must be visible ============ */
+.fx-book .page:not(.is-current) .cover__scroll { opacity: 0; }
+
+/* ============ nothing gets clipped ============ */
+/* Last resort only. Every page is designed to fit, but a stray font or an
+   unusual window should scroll the page body rather than cut it off. */
+.fx-book .page__inner {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

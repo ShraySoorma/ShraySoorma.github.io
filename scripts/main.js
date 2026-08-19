@@ -13,6 +13,13 @@
     var year = document.getElementById('colophon-year');
     if (year) year.textContent = new Date().getFullYear();
 
+    /* the book must be wired only after the project pages exist */
+    try {
+      if (window.Book) window.Book.init();
+    } catch (e) {
+      if (window.console) console.error('[book]', e);
+    }
+
     /* last resort: if anything above stalled, reveal the page anyway */
     setTimeout(function () {
       document.documentElement.classList.add('is-loaded');

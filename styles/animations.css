@@ -207,12 +207,12 @@
 
 /* ---------- 6. Scroll-driven camera (progressive enhancement, Chromium only) ---------- */
 @supports (animation-timeline: view()) {
-  .panel {
+  html:not(.fx-book) .panel {
     animation: panel-camera linear both;
     animation-timeline: view();
     animation-range: entry 20% exit 80%;
   }
-  .panel:nth-of-type(even) {
+  html:not(.fx-book) .panel:nth-of-type(even) {
     animation-name: panel-camera-alt;
     animation-timeline: view();
   }

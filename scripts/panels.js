@@ -27,10 +27,10 @@
 
   /* ---------- project lineup ---------- */
 
-  function projectPanel(p, i, total) {
+  function projectPage(p, i) {
     var num = String(i + 1).padStart(2, '0');
     var rot = ROTATIONS[i % ROTATIONS.length];
-    var orphan = (total % 2 === 1) && (i === total - 1);
+    var tid = 't-' + p.id;
 
     var bullets = (p.highlights || []).map(function (h) {
       return '<li>' + esc(h) + '</li>';
@@ -45,39 +45,50 @@
         esc(hostOf(p.link)) + '</a>'
       : '<span class="panel__link panel__link--muted">' + esc(p.linkNote || 'Private repo') + '</span>';
 
-    /* the panel shows the lead paragraph, the highlights carry the rest */
-    var body = (p.body || []).slice(0, 1).map(function (b) {
-      return '<p class="panel__prose-line">' + esc(b) + '</p>';
-    }).join('');
+    /* the lead paragraph is dropped: the highlights already carry it, and a
+       page has to fit one screen alongside the art */
+    var dek = i === 0
+      ? '<p class="caption-box page__dek">Selected work. The rest is private or under NDA.</p>'
+      : '';
 
-    return el(
-      '<article class="panel panel--project' + (orphan ? ' panel--wide' : '') +
-        '" data-status="' + esc(p.status) + '" style="--rot:' + rot + 'deg">' +
-        panelBorder() +
-        '<span class="panel__num">' + num + '</span>' +
-        '<div class="panel__media" aria-hidden="true"></div>' +
-        '<div class="panel__inner" data-stagger>' +
-          '<p class="panel__issue">' + esc(p.issue) + '</p>' +
-          '<h3 class="panel__title">' + esc(p.name) + '</h3>' +
-          '<span class="panel__status">' + esc(p.status) + '</span>' +
-          '<p class="panel__logline">' + esc(p.logline) + '</p>' +
-          '<div class="panel__prose">' + body + '</div>' +
-          '<ul class="panel__list">' + bullets + '</ul>' +
-          '<div class="panel__tags">' + tags + '</div>' +
-          cta +
-        '</div>' +
-        '<div class="burst" aria-hidden="true"><span class="burst__word">' + esc(p.burst) + '</span></div>' +
-      '</article>'
-    );
+    var page = document.createElement('section');
+    page.className = 'page';
+    page.id = 'p-' + p.id;
+    page.setAttribute('aria-labelledby', tid);
+    page.innerHTML =
+      '<span class="page__back" aria-hidden="true"></span>' +
+      '<div class="page__inner">' +
+        dek +
+        '<article class="panel panel--project panel--page" data-status="' + esc(p.status) + '" style="--rot:' + rot + 'deg">' +
+          panelBorder() +
+          '<span class="panel__num">' + num + '</span>' +
+          '<div class="panel__media" aria-hidden="true">' +
+            '<div class="burst" aria-hidden="true"><span class="burst__word">' + esc(p.burst) + '</span></div>' +
+          '</div>' +
+          '<div class="panel__inner" data-stagger>' +
+            '<p class="panel__issue">' + esc(p.issue) + '</p>' +
+            '<h2 class="panel__title" id="' + tid + '">' + esc(p.name) + '</h2>' +
+            '<span class="panel__status">' + esc(p.status) + '</span>' +
+            '<p class="panel__logline">' + esc(p.logline) + '</p>' +
+            '<ul class="panel__list">' + bullets + '</ul>' +
+            '<div class="panel__tags">' + tags + '</div>' +
+            cta +
+          '</div>' +
+        '</article>' +
+      '</div>' +
+      '<span class="page__shade" aria-hidden="true"></span>' +
+      '<span class="page__folio" aria-hidden="true">Page ' + (i + 2) + '</span>';
+    return page;
   }
 
   function renderProjects() {
-    var strip = document.getElementById('project-strip');
+    var slot = document.getElementById('project-pages');
     var list = window.PROJECTS;
-    if (!strip || !list || !list.length) return;
+    if (!slot || !list || !list.length) return;
     var frag = document.createDocumentFragment();
-    list.forEach(function (p, i) { frag.appendChild(projectPanel(p, i, list.length)); });
-    strip.appendChild(frag);
+    list.forEach(function (p, i) { frag.appendChild(projectPage(p, i)); });
+    slot.parentNode.insertBefore(frag, slot);
+    slot.parentNode.removeChild(slot);
   }
 
   /* ---------- arsenal ---------- */

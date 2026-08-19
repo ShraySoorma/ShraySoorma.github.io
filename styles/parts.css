@@ -307,3 +307,98 @@ main, .cover, .colophon { position: relative; z-index: 2; }
     margin-block-start: calc(var(--gutter) * 0.8);
   }
 }
+
+/* ============ project page: art left, text right ============ */
+.page__dek {
+  margin: 0 0 clamp(10px, 1.6vh, 20px);
+}
+
+.fx-book .panel--page {
+  block-size: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  align-items: stretch;
+  column-gap: calc(var(--gutter) * 1.15);
+  overflow: hidden;
+}
+
+.fx-book .panel--page .panel__media {
+  position: relative;
+  grid-column: 1;
+  aspect-ratio: auto;
+  block-size: auto;
+  margin: calc(var(--gutter) * -1) 0 calc(var(--gutter) * -1) calc(var(--gutter) * -1);
+  border-block-end: 0;
+  border-inline-end: var(--line) solid var(--ink);
+  display: grid;
+  place-items: center;
+}
+
+.fx-book .panel--page .panel__media .burst {
+  position: static;
+  rotate: -7deg;
+}
+
+.fx-book .panel--page .panel__inner {
+  grid-column: 2;
+  justify-content: center;
+  gap: clamp(6px, 1.1vh, 14px);
+  min-block-size: 0;
+}
+
+.fx-book .panel--page .panel__logline { font-size: var(--step-1); }
+.fx-book .panel--page .panel__title   { font-size: var(--step-3); }
+
+/* ============ pages must fit one screen ============ */
+.fx-book .page__inner .issue__header { margin-block-end: clamp(10px, 1.8vh, 24px); }
+
+.fx-book #origin .strip--two,
+.fx-book #arsenal .strip--arsenal { align-items: stretch; }
+
+.fx-book #origin .panel__media { min-block-size: 8rem; }
+
+.fx-book #arsenal .strip--arsenal { --cols: 3; gap: calc(var(--gutter) * 0.8); }
+.fx-book #arsenal .panel { padding: calc(var(--gutter) * 0.7); }
+.fx-book #arsenal .panel__kicker { font-size: var(--step-0); margin-block-end: 0.4em; }
+
+.fx-book .page--final .colophon {
+  display: block;
+  margin-block-start: clamp(12px, 2vh, 28px);
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* short desktop windows: pull the type in rather than clip a page */
+@media (min-width: 900px) and (max-height: 780px) {
+  .fx-book .panel--page .panel__title   { font-size: var(--step-2); }
+  .fx-book .panel--page .panel__logline { font-size: var(--step-0); }
+  .fx-book .page-title { font-size: var(--step-2); }
+}
+
+/* ============ compaction for shorter desktop windows ============ */
+@media (min-width: 900px) and (max-height: 900px) {
+  .fx-book #origin .panel__prose-line { font-size: var(--step--1); line-height: 1.42; }
+  .fx-book #origin .panel__prose { gap: 0.4em; }
+  .fx-book #origin .panel { padding: calc(var(--gutter) * 0.7); }
+  .fx-book #origin .panel__media { min-block-size: 5rem; }
+  .fx-book #origin .bubble { font-size: var(--step--1); }
+
+  .fx-book #arsenal .tag { font-size: 0.72rem; padding: 0.25em 0.5em; }
+  .fx-book #arsenal .panel__tags { gap: 0.3em; }
+
+  .fx-book .page--final .panel--splash { gap: calc(var(--gutter) * 0.6); }
+  .fx-book .page--final .panel__title--big { font-size: var(--step-2); }
+  .fx-book .page--final .contact-grid { gap: calc(var(--gutter) * 0.5); }
+  .fx-book .page--final .contact-card { padding: 0.6em 0.85em; }
+  .fx-book .page--final .colophon { font-size: 0.72rem; }
+  .fx-book .page--final .to-be-continued { font-size: var(--step-0); }
+
+  .fx-book .panel--page .panel__list { gap: 0.25em; }
+  .fx-book .panel--page .tag { font-size: 0.72rem; padding: 0.25em 0.5em; }
+}
+
+/* five links read better three up than four plus a stray */
+.fx-book .page--final .contact-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
