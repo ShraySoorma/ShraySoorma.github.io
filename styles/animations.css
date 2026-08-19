@@ -258,22 +258,18 @@
 /* ---------- 9. Ink cursor (elements are created by JS, so no-JS pages never see them) ---------- */
 .fx-cursor,
 .fx-cursor * { cursor: none; }
-.ink-cursor,
-.ink-cursor__trail {
+/* the arrow: inked blade over an offset colour plate, tip on the hotspot */
+.ink-cursor {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none;
-  z-index: 9990;
-  will-change: transform;
-}
-
-/* the arrow: inked blade over an offset colour plate, tip on the hotspot */
-.ink-cursor {
   width: 24px;
   height: 30px;
   margin: -1px 0 0 -2px;
   transform-origin: 2px 1px;
+  pointer-events: none;
+  z-index: 9990;
+  will-change: transform;
 }
 .ink-cursor__arrow {
   display: block;
@@ -295,19 +291,8 @@
   stroke-linejoin: round;
 }
 
-/* the lagging halftone ring stays as the comic flourish */
-.ink-cursor__trail {
-  width: 30px;
-  height: 30px;
-  /* seated on the body of the arrow, not on its tip */
-  margin: -2px 0 0 -5px;
-  border-radius: 50%;
-  border: var(--line-hair) solid var(--ink);
-  opacity: 0.45;
-}
 @media (hover: none), (pointer: coarse) {
-  .ink-cursor,
-  .ink-cursor__trail { display: none; }
+  .ink-cursor { display: none; }
 }
 
 /* ---------- 10. Issue page turn (parent .issues holds the 3D stage) ---------- */
@@ -361,8 +346,7 @@
     stroke-dasharray: none !important;
     stroke-dashoffset: 0 !important;
   }
-  .ink-cursor,
-  .ink-cursor__trail { display: none !important; }
+  .ink-cursor { display: none !important; }
   #preloader { display: none !important; }
   .is-typing::after { content: none !important; }
 }

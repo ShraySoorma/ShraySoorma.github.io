@@ -11,7 +11,6 @@
   var rmQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   var loops = [];
   var cursorDot = null;
-  var cursorTrail = null;
   var booted = false;
   var easeCache = {};
 
@@ -92,8 +91,7 @@
     if (!reducedMotion()) return;
     for (var i = 0; i < loops.length; i++) loops[i].stop();
     if (cursorDot && cursorDot.parentNode) cursorDot.parentNode.removeChild(cursorDot);
-    if (cursorTrail && cursorTrail.parentNode) cursorTrail.parentNode.removeChild(cursorTrail);
-    cursorDot = cursorTrail = null;
+    cursorDot = null;
     root.classList.remove("fx-cursor");
   }
   if (rmQuery) {
@@ -239,9 +237,6 @@
     if (reducedMotion() || !window.requestAnimationFrame || !document.body) return;
     if (!window.matchMedia || !window.matchMedia("(pointer: fine)").matches) return;
     if (cursorDot) return;
-    cursorTrail = document.createElement("div");
-    cursorTrail.className = "ink-cursor__trail";
-    cursorTrail.setAttribute("aria-hidden", "true");
     cursorDot = document.createElement("div");
     cursorDot.className = "ink-cursor";
     cursorDot.setAttribute("aria-hidden", "true");
@@ -250,12 +245,10 @@
         '<path class="ink-cursor__plate" d="M2 1 L2 23 L8 17.5 L11.5 26 L15.5 24 L12 16 L20 15.5 Z"/>' +
         '<path class="ink-cursor__blade" d="M2 1 L2 23 L8 17.5 L11.5 26 L15.5 24 L12 16 L20 15.5 Z"/>' +
       '</svg>';
-    document.body.appendChild(cursorTrail);
     document.body.appendChild(cursorDot);
     root.classList.add("fx-cursor");
     var tx = -100, ty = -100;
     var dx = -100, dy = -100;
-    var tlx = -100, tly = -100;
     var scale = 1, targetScale = 1, pressScale = 1;
     document.addEventListener("pointermove", function (e) {
       tx = e.clientX;
@@ -269,17 +262,14 @@
     document.addEventListener("pointerdown", function () { pressScale = 0.72; }, { passive: true });
     document.addEventListener("pointerup", function () { pressScale = 1; }, { passive: true });
     addLoop(function () {
-      if (!cursorDot || !cursorTrail) return;
+      if (!cursorDot) return;
+      /* dx trails the raw position only to derive a lean angle */
       dx += (tx - dx) * 0.42;
       dy += (ty - dy) * 0.42;
-      tlx += (tx - tlx) * 0.24;
-      tly += (ty - tly) * 0.24;
       scale += (targetScale * pressScale - scale) * 0.2;
       cursorDot.style.transform =
         "translate3d(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px,0) rotate(" +
         ((dx - tx) * 0.45).toFixed(2) + "deg) scale(" + scale.toFixed(3) + ")";
-      cursorTrail.style.transform =
-        "translate3d(" + tlx.toFixed(1) + "px," + tly.toFixed(1) + "px,0) scale(" + scale.toFixed(3) + ")";
     });
   }
 
