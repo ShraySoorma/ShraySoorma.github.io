@@ -1,142 +1,185 @@
-/* Comic book pagination. Every rule here is gated behind .fx-book, which JS adds
-   only on wide, tall, motion-friendly viewports. Without it the pages fall back
-   to ordinary stacked sections, which is the vertical scrolling comic. */
+/* An open comic on a table. Gated behind .fx-book, which JS adds only on wide,
+   tall, motion-friendly viewports. Without it the leaf wrappers collapse with
+   display:contents and the pages stack as an ordinary vertical comic. */
 
-/* ============ fallback: plain flow ============ */
+/* ============ fallback: the leaf structure disappears ============ */
 .book__rail { display: none; }
+.spread,
+.leaf,
+.leaf__face { display: contents; }
+.spread__base { display: none; }
 
-.page {
-  position: relative;
-  padding: var(--page-pad);
-}
+.page { position: relative; padding: var(--page-pad); }
+.page__back, .page__shade, .page__folio { display: none; }
 
-.page__back,
-.page__shade,
-.page__folio { display: none; }
-
-/* ============ book mode ============ */
-.fx-book {
-  scroll-snap-type: y mandatory;
-}
+/* ============ the table ============ */
+.fx-book { scroll-snap-type: y mandatory; }
 
 .fx-book .book__stage {
   position: fixed;
   inset: 0;
   z-index: 2;
-  perspective: 3200px;
-  perspective-origin: 0% 50%;
-  pointer-events: none;
-}
-
-.fx-book .book__rail {
-  display: block;
-  position: relative;
-  z-index: 0;
-}
-
-.fx-book .book__slot {
-  height: 100vh;
-  height: 100svh;
-  scroll-snap-align: start;
-}
-
-.fx-book .page {
-  position: absolute;
-  inset: 0;
-  z-index: calc(var(--pages, 7) - var(--n, 0));
   display: grid;
-  padding: 0;
-  overflow: hidden;
-  transform-origin: 0% 50%;
-  /* the leaf lifts off the spine and sweeps left. It fades out over the last
-     quarter of the turn, which is where a real page would be edge on and
-     unreadable anyway, and it keeps the sheet from parking off screen. */
-  transform:
-    translate3d(calc(var(--turn, 0) * -14%), 0, 0)
-    rotateY(calc(var(--turn, 0) * -105deg));
-  opacity: calc((0.98 - var(--turn, 0)) * 3.5);
-  background-color: var(--paper);
-  border-inline-start: var(--line-heavy) solid var(--ink);
-  box-shadow: 0 0 0 0 transparent;
-  will-change: transform;
+  place-items: center;
+  perspective: 2800px;
+  perspective-origin: 50% 46%;
+  background-color: var(--desk);
+  background-image:
+    radial-gradient(ellipse at 50% 44%,
+      color-mix(in srgb, var(--desk) 76%, var(--paper)) 0%,
+      var(--desk) 62%);
   pointer-events: none;
 }
 
-.fx-book .page.is-current { pointer-events: auto; }
+.fx-book .book__rail { display: block; position: relative; z-index: 0; }
+.fx-book .book__slot { height: 100vh; height: 100svh; scroll-snap-align: start; }
 
-/* a fully turned page must not eat clicks or paint over the next one */
-.fx-book .page[inert] { pointer-events: none; }
+/* ============ the book ============ */
+.fx-book .spread {
+  --page-h: min(86svh, 66vw);
+  --page-w: calc(var(--page-h) * 0.68);
+  /* one page unit: everything on a page is sized in these, so the spread
+     scales as one piece instead of being tuned per window */
+  --pu: calc(var(--page-h) / 100);
+  position: relative;
+  display: block;
+  inline-size: calc(var(--page-w) * 2);
+  block-size: var(--page-h);
+  transform-style: preserve-3d;
+  /* closed, the book sits centred on its cover, then slides open to a spread */
+  translate: calc((var(--open, 1) - 1) * 25%) 0;
+}
 
-/* the leaf fades before its reverse could face the reader, so the back face
-   is never needed, and opacity on the page would flatten preserve-3d anyway */
-.fx-book .page__back {
-  display: none;
+/* the block of pages you have not reached, and the ones behind you */
+.fx-book .spread::before,
+.fx-book .spread::after {
+  content: "";
+  position: absolute;
+  inset-block: 1.2%;
+  inline-size: 10px;
+  z-index: 0;
+  background: repeating-linear-gradient(90deg,
+    var(--paper-edge) 0 1px, var(--paper-deep) 1px 3px);
+  border: var(--line-hair) solid var(--ink);
+}
+.fx-book .spread::before {
+  inset-inline-start: -10px;
+  border-radius: 3px 0 0 3px;
+  opacity: var(--open, 1);
+}
+.fx-book .spread::after  { inset-inline-end: -10px;  border-radius: 0 3px 3px 0; }
+
+/* the two halves of the open book, seen only behind a turning leaf */
+.fx-book .spread__base {
+  display: block;
+  position: absolute;
+  inset-block: 0;
+  inline-size: var(--page-w);
+  z-index: 1;
+  background-color: var(--paper-deep);
+  border: var(--line) solid var(--ink);
+}
+.fx-book .spread__base--left  { inset-inline-start: 0; opacity: var(--open, 1); }
+.fx-book .spread__base--right { inset-inline-start: var(--page-w); }
+
+/* ============ the leaf ============ */
+.fx-book .leaf {
+  display: block;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: var(--page-w);
+  inline-size: var(--page-w);
+  block-size: 100%;
+  transform-origin: left center;
+  transform: rotateY(calc(var(--turn, 0) * -180deg));
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.fx-book .leaf.is-turning { will-change: transform; }
+
+/* both printed sides of one sheet */
+.fx-book .leaf__face {
+  display: block;
   position: absolute;
   inset: 0;
-  transform: rotateY(180deg);
+  overflow: hidden;
   backface-visibility: hidden;
+  background-color: var(--paper);
+  border: var(--line) solid var(--ink);
+  pointer-events: auto;
+}
+.fx-book .leaf__face--back { transform: rotateY(180deg); }
+.fx-book .leaf__face--blank {
   background-color: var(--paper-deep);
   background-image:
     repeating-radial-gradient(circle at 50% 50%,
       var(--dot-color-2) 0 calc(var(--dot-size) * 0.24),
       transparent calc(var(--dot-size) * 0.24) calc(var(--dot-size) * 2));
   background-size: calc(var(--dot-size) * 2.4) calc(var(--dot-size) * 2.4);
-  border-inline-end: var(--line-heavy) solid var(--ink);
 }
 
-/* curl shadow: the leaf darkens as it lifts off the spine */
-.fx-book .page__shade {
-  display: block;
+/* the gutter: ink pooling into the spine, mirrored on the reverse for free */
+.fx-book .leaf__face::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 16%;
+  pointer-events: none;
+  z-index: 30;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--ink) 42%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 10%, transparent) 45%,
+    transparent 100%);
+}
+
+/* A lifting leaf catches the light on its way over. The curve peaks mid turn
+   and returns to zero, so a landed page is never left sitting in shadow. */
+.fx-book .leaf__face::before {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 20;
+  z-index: 29;
   pointer-events: none;
-  background: linear-gradient(90deg,
-    color-mix(in srgb, var(--ink) 55%, transparent) 0%,
-    color-mix(in srgb, var(--ink) 12%, transparent) 28%,
-    transparent 62%);
-  opacity: calc(var(--turn, 0) * 0.85);
+  background-color: var(--ink);
+  opacity: calc(var(--turn, 0) * (1 - var(--turn, 0)) * 4 * 0.3);
 }
 
-/* ============ page contents ============ */
-.fx-book .page__inner {
-  place-self: center;
-  inline-size: min(100%, 78rem);
-  max-block-size: 100svh;
-  padding: clamp(20px, 3.4vh, 52px) var(--page-pad);
+/* ============ the page inside a face ============ */
+.fx-book .page {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  padding: 0;
   overflow: hidden;
+  background: none;
+}
+
+.fx-book .page__inner {
+  place-self: stretch;
+  padding: clamp(14px, 2.6vh, 30px) clamp(16px, 2vw, 30px) clamp(30px, 4vh, 46px);
+  /* every page is sized to fit, but a stray font or an odd window scrolls the
+     sheet rather than cutting the bottom off */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  align-content: start;
+  gap: clamp(6px, 1.1vh, 14px);
 }
 
 /* ============ folio ============ */
 .fx-book .page__folio {
   display: block;
   position: absolute;
-  inset-block-end: calc(var(--page-pad) * 0.45);
-  inset-inline-end: calc(var(--page-pad) * 0.6);
-  z-index: 15;
+  inset-block-end: clamp(8px, 1.4vh, 16px);
+  inset-inline: 0;
+  z-index: 25;
+  text-align: center;
   font-family: var(--font-display);
-  font-size: var(--step--1);
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-
-/* the cover carries no folio, and the colophon only exists at the end */
 .fx-book #cover .page__folio { display: none; }
-
-.fx-book .colophon {
-  position: relative;
-  z-index: 3;
-  display: none;
-}
-
-/* ============ mid turn: the page underneath must be visible ============ */
-.fx-book .page:not(.is-current) .cover__scroll { opacity: 0; }
-
-/* ============ nothing gets clipped ============ */
-/* Last resort only. Every page is designed to fit, but a stray font or an
-   unusual window should scroll the page body rather than cut it off. */
-.fx-book .page__inner {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}

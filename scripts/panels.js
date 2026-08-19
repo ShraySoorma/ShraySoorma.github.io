@@ -56,7 +56,6 @@
     page.id = 'p-' + p.id;
     page.setAttribute('aria-labelledby', tid);
     page.innerHTML =
-      '<span class="page__back" aria-hidden="true"></span>' +
       '<div class="page__inner">' +
         dek +
         '<article class="panel panel--project panel--page" data-status="' + esc(p.status) + '" style="--rot:' + rot + 'deg">' +
@@ -76,7 +75,6 @@
           '</div>' +
         '</article>' +
       '</div>' +
-      '<span class="page__shade" aria-hidden="true"></span>' +
       '<span class="page__folio" aria-hidden="true">Page ' + (i + 2) + '</span>';
     return page;
   }

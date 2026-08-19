@@ -1,30 +1,89 @@
-/* Page turn controller. Presentation only: real scroll drives everything,
-   so the scrollbar, keyboard, trackpad, and touch are never hijacked. */
+/* A real book: leaves with two printed sides, hinged on a centre spine.
+   Leaf k carries page 2k on its front and page 2k+1 on its back, so turning
+   one leaf swaps both halves of the spread the way paper actually does.
+   Scroll is never hijacked: the rail supplies one screen of real scroll per
+   turn, and the controller only maps scroll position onto a --turn value. */
 (function () {
   'use strict';
 
   var root = document.documentElement;
-  var book, stage, rail, pages = [];
-  var pageCount = 0;
+  var book, stage, rail, spread;
+  var pages = [], leaves = [];
+  var turns = 0;
   var frame = 0;
-  var active = -1;
+  var spreadIndex = -1;
   var enabled = false;
+  var built = false;
 
-  var MODE = '(min-width: 900px) and (min-height: 700px)';
-  var TURN_DEG = -168;
+  var MODE = '(min-width: 900px) and (min-height: 640px)';
 
   function reducedMotion() {
     return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
 
   function shouldEnable() {
-    if (reducedMotion()) return false;
-    if (!window.matchMedia) return false;
-    if (!('transform' in root.style) && !('webkitTransform' in root.style)) return false;
-    return window.matchMedia(MODE).matches;
+    return !reducedMotion() && !!window.matchMedia && window.matchMedia(MODE).matches;
   }
 
-  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+  /* ---------- build the leaves ---------- */
+
+  function build() {
+    if (built) return;
+    built = true;
+
+    spread = document.createElement('div');
+    spread.className = 'spread';
+
+    var baseL = document.createElement('div');
+    baseL.className = 'spread__base spread__base--left';
+    baseL.setAttribute('aria-hidden', 'true');
+    var baseR = document.createElement('div');
+    baseR.className = 'spread__base spread__base--right';
+    baseR.setAttribute('aria-hidden', 'true');
+    spread.appendChild(baseL);
+    spread.appendChild(baseR);
+
+    var leafCount = Math.ceil(pages.length / 2);
+    for (var k = 0; k < leafCount; k++) {
+      var leaf = document.createElement('div');
+      leaf.className = 'leaf';
+      leaf.style.setProperty('--k', k);
+
+      var front = document.createElement('div');
+      front.className = 'leaf__face leaf__face--front';
+      var back = document.createElement('div');
+      back.className = 'leaf__face leaf__face--back';
+
+      leaf.appendChild(front);
+      leaf.appendChild(back);
+      spread.appendChild(leaf);
+      leaves.push({ el: leaf, front: front, back: back });
+    }
+
+    /* page 2k to the front of leaf k, page 2k+1 to its back */
+    for (var i = 0; i < pages.length; i++) {
+      var slot = leaves[Math.floor(i / 2)][i % 2 === 0 ? 'front' : 'back'];
+      slot.appendChild(pages[i]);
+    }
+
+    /* the last leaf's blank reverse is the back cover */
+    var last = leaves[leaves.length - 1];
+    if (!last.back.firstChild) last.back.classList.add('leaf__face--blank');
+
+    stage.appendChild(spread);
+    turns = leaves.length - 1;
+
+    /* one snap slot per turn, plus one for the closed book */
+    var frag = document.createDocumentFragment();
+    for (var s = 0; s <= turns; s++) {
+      var slot = document.createElement('div');
+      slot.className = 'book__slot';
+      frag.appendChild(slot);
+    }
+    rail.appendChild(frag);
+  }
 
   /* ---------- reveal ---------- */
 
@@ -41,15 +100,21 @@
     }
   }
 
-  function setActive(n) {
-    if (n === active) return;
-    active = n;
-    for (var i = 0; i < pageCount; i++) {
+  /* the two pages facing the reader at spread s */
+  function facingPages(s) {
+    var out = [];
+    if (s > 0 && pages[2 * s - 1]) out.push(pages[2 * s - 1]);  /* left: back of leaf s-1 */
+    if (pages[2 * s]) out.push(pages[2 * s]);                    /* right: front of leaf s */
+    return out;
+  }
+
+  function setSpread(s) {
+    if (s === spreadIndex) return;
+    spreadIndex = s;
+    var facing = facingPages(s).concat(facingPages(s + 1));
+    for (var i = 0; i < pages.length; i++) {
       var p = pages[i];
-      var current = (i === n);
-      p.classList.toggle('is-current', current);
-      /* keep focus and screen readers on the page actually facing the reader */
-      if (current) {
+      if (facing.indexOf(p) > -1) {
         p.removeAttribute('inert');
         p.removeAttribute('aria-hidden');
         revealPage(p);
@@ -67,16 +132,28 @@
     if (!enabled) return;
     var h = window.innerHeight || 1;
     var progress = (window.pageYOffset || root.scrollTop || 0) / h;
-    for (var i = 0; i < pageCount; i++) {
-      pages[i].style.setProperty('--turn', clamp(progress - i).toFixed(4));
+
+    for (var k = 0; k < leaves.length; k++) {
+      var t = clamp01(progress - k);
+      var leaf = leaves[k];
+      leaf.el.style.setProperty('--turn', t.toFixed(4));
+      /* unturned leaves stack with the cover on top, turned leaves stack in
+         the order they landed, and whichever leaf is moving sits above both */
+      var z;
+      if (t > 0 && t < 1) z = 500;
+      else if (t >= 1) z = 100 + k;
+      else z = 50 - k;
+      leaf.el.style.zIndex = z;
+      leaf.el.classList.toggle('is-turning', t > 0 && t < 1);
     }
-    var n = Math.round(progress);
-    if (n < 0) n = 0;
-    if (n > pageCount - 1) n = pageCount - 1;
-    setActive(n);
-    /* the page you are turning onto is already in view, so it must be
-       revealed before it becomes current or you flip onto blank paper */
-    if (n + 1 < pageCount) revealPage(pages[n + 1]);
+
+    /* the closed book sits centred on its cover, then slides to a full spread */
+    spread.style.setProperty('--open', clamp01(progress).toFixed(4));
+
+    var s = Math.round(progress);
+    if (s < 0) s = 0;
+    if (s > turns) s = turns;
+    setSpread(s);
   }
 
   function queue() {
@@ -87,25 +164,26 @@
 
   function enable() {
     if (enabled) return;
+    build();
     enabled = true;
     root.classList.add('fx-book');
-    rail.style.height = (pageCount * 100) + 'svh';
+    rail.style.height = ((turns + 1) * 100) + 'svh';
+    spreadIndex = -1;
     write();
   }
 
   function disable() {
-    if (!enabled) return;
     enabled = false;
     root.classList.remove('fx-book');
-    rail.style.height = '';
-    active = -1;
-    for (var i = 0; i < pageCount; i++) {
-      pages[i].style.removeProperty('--turn');
-      pages[i].classList.remove('is-current');
+    if (rail) rail.style.height = '';
+    spreadIndex = -1;
+    for (var i = 0; i < pages.length; i++) {
       pages[i].removeAttribute('inert');
       pages[i].removeAttribute('aria-hidden');
-      /* everything stays visible in the scrolling fallback */
-      revealPage(pages[i]);
+    }
+    for (var k = 0; k < leaves.length; k++) {
+      leaves[k].el.style.zIndex = '';
+      leaves[k].el.style.removeProperty('--turn');
     }
   }
 
@@ -121,68 +199,49 @@
     stage = book.querySelector('.book__stage');
     rail = book.querySelector('.book__rail');
     pages = [].slice.call(book.querySelectorAll('.page'));
-    pageCount = pages.length;
-    if (!stage || !rail || !pageCount) return;
+    if (!stage || !rail || !pages.length) return;
 
-    for (var i = 0; i < pageCount; i++) pages[i].style.setProperty('--n', i);
-    book.style.setProperty('--pages', pageCount);
-
-    /* build the scroll rail: one snap slot per page */
-    var frag = document.createDocumentFragment();
-    for (var s = 0; s < pageCount; s++) {
-      var slot = document.createElement('div');
-      slot.className = 'book__slot';
-      frag.appendChild(slot);
-    }
-    rail.appendChild(frag);
-
-    syncMode();
-
-    /* pages are fixed in book mode, so a plain #hash jump has nothing to
-       scroll to. Translate in page anchors into a scroll to that page's slot. */
-    function pageIndexOf(id) {
-      for (var i = 0; i < pageCount; i++) if (pages[i].id === id) return i;
+    function spreadOf(id) {
+      for (var i = 0; i < pages.length; i++) if (pages[i].id === id) return Math.floor(i / 2);
       return -1;
     }
 
     function goTo(id) {
-      var i = pageIndexOf(id);
-      if (i < 0) return false;
+      var s = spreadOf(id);
+      if (s < 0) return false;
       /* plain scrollTo, so the sheet's scroll-behavior wins and the whole
          thing honours prefers-reduced-motion without asking */
-      window.scrollTo(0, i * (window.innerHeight || 0));
+      window.scrollTo(0, s * (window.innerHeight || 0));
       return true;
     }
 
+    /* leaves are fixed in book mode, so a plain #hash jump has nothing to
+       scroll to. Translate in page anchors into a scroll to that spread. */
     document.addEventListener('click', function (e) {
       if (!enabled || e.defaultPrevented) return;
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
       if (!a) return;
       var id = a.getAttribute('href').slice(1);
-      if (!id) return;
-      if (goTo(id)) {
+      if (id && goTo(id)) {
         e.preventDefault();
         var target = document.getElementById(id);
         if (target) {
-          /* move focus with the page so keyboard users land where they clicked */
           target.setAttribute('tabindex', '-1');
           try { target.focus({ preventScroll: true }); } catch (er) { target.focus(); }
         }
       }
     });
 
-    /* deep link on load, and support back and forward between pages */
-    function applyHash() {
-      if (!enabled || !location.hash) return;
-      goTo(location.hash.slice(1));
-      queue();
-    }
     window.addEventListener('hashchange', function () {
-      if (!enabled) return;
-      goTo(location.hash.slice(1));
+      if (enabled) goTo(location.hash.slice(1));
     });
-    if (location.hash) window.setTimeout(applyHash, 0);
+
+    syncMode();
+
+    if (location.hash) window.setTimeout(function () {
+      if (enabled) { goTo(location.hash.slice(1)); queue(); }
+    }, 0);
 
     window.addEventListener('scroll', queue, { passive: true });
     window.addEventListener('resize', function () { syncMode(); queue(); }, { passive: true });
@@ -200,12 +259,8 @@
 
   window.Book = {
     init: init,
-    /* synchronous recompute, used after content changes and by tests */
     refresh: write,
-    pageOffset: function (id) {
-      for (var i = 0; i < pageCount; i++) if (pages[i].id === id) return i * (window.innerHeight || 0);
-      return 0;
-    },
-    isEnabled: function () { return enabled; }
+    isEnabled: function () { return enabled; },
+    leafCount: function () { return leaves.length; }
   };
 })();
