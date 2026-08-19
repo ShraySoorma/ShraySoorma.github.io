@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" data-variant="hero">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shray Soorma // Issue #1</title>
+<meta name="description" content="Shray Soorma, full-stack engineer. Six projects, shipped solo: AI video production, client pipelines, native macOS apps, and automation.">
+<meta name="color-scheme" content="light">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shray Soorma // Issue #1">
+<meta property="og:description" content="Full-stack engineer. Six projects, shipped solo.">
+<meta property="og:url" content="https://shraysoorma.github.io">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito+Sans:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/panels.css">
+<link rel="stylesheet" href="styles/parts.css">
+<link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+
+<!-- ============ preloader: the cover tears open ============ -->
+<div id="preloader" aria-hidden="true">
+  <div class="preloader__half preloader__half--l">
+    <div class="preloader__face"><span class="preloader__mark">SS</span><span class="preloader__no">No. 1</span></div>
+  </div>
+  <div class="preloader__half preloader__half--r">
+    <div class="preloader__face"><span class="preloader__mark">SS</span><span class="preloader__no">No. 1</span></div>
+  </div>
+  <div class="preloader__seam"></div>
+</div>
+
+<!-- ============ print furniture ============ -->
+<div class="paper-grain" aria-hidden="true"></div>
+<div class="halftone-layer" aria-hidden="true"></div>
+<div class="ink-cursor" aria-hidden="true"><i class="ink-cursor__dot"></i></div>
+<div class="ink-cursor__trail" aria-hidden="true"></div>
+
+<a class="skip-link" href="#lineup">Skip to the projects</a>
+
+<!-- ============ cover ============ -->
+<header class="cover" id="cover">
+  <span class="cover__issue">No. 1</span>
+  <span class="cover__price">10&cent;</span>
+  <span class="cover__date">Soorma Comics</span>
+
+  <div class="cover__stack">
+    <p class="caption-box cover__kicker">Meanwhile, in the terminal&hellip;</p>
+
+    <h1 class="cover__name-wrap">
+      <span class="cover__line">
+        <span class="cover__name cover__name--red" aria-hidden="true">Shray</span>
+        <span class="cover__name cover__name--blue" aria-hidden="true">Shray</span>
+        <span class="cover__name">Shray</span>
+      </span>
+      <span class="cover__line">
+        <span class="cover__name cover__name--red" aria-hidden="true">Soorma</span>
+        <span class="cover__name cover__name--blue" aria-hidden="true">Soorma</span>
+        <span class="cover__name">Soorma</span>
+      </span>
+    </h1>
+
+    <p class="cover__tagline" id="cover-tagline">Full-stack engineer</p>
+
+
+    <nav class="cover__cta" aria-label="Primary">
+      <a class="btn btn--primary" href="#lineup">See the lineup</a>
+      <a class="btn btn--ghost" href="#contact">Get in touch</a>
+    </nav>
+  </div>
+
+  <div class="burst cover__burst" aria-hidden="true"><span class="burst__word">POW!</span></div>
+
+  <a class="cover__scroll" href="#lineup">Turn the page</a>
+</header>
+
+<main class="issues">
+
+<!-- ============ origin story ============ -->
+<section class="issue" id="origin">
+  <div class="issue__header">
+    <h2 class="page-title" data-text="Origin Story">Origin Story</h2>
+  </div>
+  <div class="strip strip--two">
+    <article class="panel" style="--rot:-0.5deg">
+      <span class="panel__num">1</span>
+      <div class="panel__body">
+        <p class="caption-box">Every engineer has an origin.</p>
+        <div class="panel__prose" id="origin-prose" data-stagger></div>
+      </div>
+    </article>
+    <article class="panel" style="--rot:0.8deg">
+      <div class="panel__media" aria-hidden="true"></div>
+      <div class="bubble bubble--right">
+        <p id="origin-bubble" data-typewriter></p>
+        <span class="bubble__tail" aria-hidden="true"></span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<hr class="rule-jagged" aria-hidden="true">
+
+<!-- ============ the lineup ============ -->
+<section class="issue" id="lineup">
+  <div class="issue__header">
+    <h2 class="page-title" data-text="The Lineup">The Lineup</h2>
+    <p class="issue__dek">Selected work. The rest is private or under NDA.</p>
+  </div>
+  <div class="strip strip--six" id="project-strip"></div>
+</section>
+
+<hr class="rule-jagged" aria-hidden="true">
+
+<!-- ============ arsenal ============ -->
+<section class="issue" id="arsenal">
+  <div class="issue__header">
+    <h2 class="page-title" data-text="The Arsenal">The Arsenal</h2>
+    <p class="issue__dek">The tools I reach for.</p>
+  </div>
+  <div class="strip strip--arsenal" id="arsenal-strip"></div>
+</section>
+
+<!-- ============ last page ============ -->
+<section class="issue issue--final" id="contact">
+  <div class="issue__header">
+    <h2 class="page-title" data-text="Next Issue">Next Issue</h2>
+  </div>
+  <article class="panel panel--splash" style="--rot:0deg">
+    <p class="caption-box">Letters page. Write in.</p>
+    <h3 class="panel__title panel__title--big">Let's build something.</h3>
+    <p class="panel__logline">Open to full-stack and product engineering roles. Fastest way to reach me is email.</p>
+    <nav class="contact-grid" id="contact-grid" aria-label="Contact links"></nav>
+    <p class="to-be-continued" aria-hidden="true">To be continued...</p>
+  </article>
+</section>
+
+</main>
+
+<footer class="colophon">
+  <p>Set in Bangers and Nunito Sans. Hand written HTML, CSS, and JavaScript. No frameworks, no build step.</p>
+  <p><span id="colophon-year"></span> Shray Soorma</p>
+</footer>
+
+<script src="scripts/data.js" defer></script>
+<script src="scripts/panels.js" defer></script>
+<script src="scripts/main.js" defer></script>
+<script src="scripts/fx.js" defer></script>
+</body>
+</html>

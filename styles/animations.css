@@ -1,0 +1,345 @@
+/* ============================================================
+   animations.css  Golden Age comic FX layer
+   Colors and easings come from tokens.css only.
+   Animates transform and opacity only (plus stroke-dashoffset
+   for the requested SVG border draw).
+   JS gate: fx.js adds .fx-anim to <html>; every JS-dependent
+   hidden state lives behind it so a JS failure never hides
+   content. #preloader is the one CSS-hidden exception, torn
+   down by the JS 2000ms failsafe.
+   ============================================================ */
+
+/* ---------- 1. Preloader: cover tear + 3D peel ---------- */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  perspective: 1200px;
+  background: transparent;
+}
+.preloader__half {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51.5%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, var(--dot-color) 1.2px, transparent 1.5px)
+      0 0 / var(--dot-size) var(--dot-size),
+    var(--paper);
+  transition:
+    transform var(--dur-slow) var(--ease-ink) 140ms,
+    opacity var(--dur-slow) var(--ease-ink) 140ms;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.preloader__half--l {
+  left: 0;
+  transform-origin: 0% 50%;
+  clip-path: polygon(0 0, 100% 0, 98.5% 6%, 100% 13%, 98% 22%, 99.5% 31%, 98% 41%, 100% 52%, 98.5% 62%, 99.8% 73%, 98% 84%, 100% 93%, 98.5% 100%, 0 100%);
+}
+.preloader__half--r {
+  right: 0;
+  transform-origin: 100% 50%;
+  transition-delay: 220ms;
+  clip-path: polygon(1.5% 0, 100% 0, 100% 100%, 1% 100%, 2.5% 93%, 0.8% 84%, 2% 73%, 0.5% 62%, 2% 52%, 0.6% 41%, 2.2% 31%, 0.8% 22%, 2.5% 13%, 1% 6%);
+}
+.preloader__face {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-display);
+  font-size: var(--step-2);
+  text-align: center;
+}
+.preloader__half--l .preloader__face { left: 0; }
+.preloader__half--r .preloader__face { right: 0; }
+.preloader__seam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--line);
+  height: 100%;
+  margin-left: calc(var(--line) / -2);
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  will-change: transform, opacity;
+}
+.is-loaded #preloader { pointer-events: none; }
+.is-loaded .preloader__seam {
+  animation: seam-tear 160ms var(--ease-snap) forwards;
+  transition: opacity var(--dur) linear 280ms;
+  opacity: 0;
+}
+@keyframes seam-tear {
+  to { transform: scaleY(1); }
+}
+.is-loaded .preloader__half--l {
+  transform: translateX(-64%) rotateY(46deg) rotate(-5deg);
+  opacity: 0;
+}
+.is-loaded .preloader__half--r {
+  transform: translateX(64%) rotateY(-46deg) rotate(5deg);
+  opacity: 0;
+}
+
+/* ---------- 2. Cover title: letter drop + misregister ---------- */
+.cover__name-wrap {
+  position: relative;
+  display: inline-block;
+}
+.cover__name {
+  position: relative;
+  z-index: 2;
+}
+.cover__name .letter {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  transform: translateY(-1.3em) rotate(-8deg) scale(1.15);
+  transition:
+    transform var(--dur) var(--ease-thwack),
+    opacity var(--dur-fast) linear;
+  transition-delay: calc(320ms + var(--i, 0) * 42ms);
+  will-change: transform, opacity;
+}
+.is-loaded .cover__name .letter {
+  opacity: 1;
+  transform: none;
+}
+.cover__name--red,
+.cover__name--blue {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: multiply;
+  transition: transform var(--dur-slow) var(--ease-ink) 420ms;
+  will-change: transform;
+}
+.cover__name--red {
+  color: var(--accent);
+  transform: translate(-0.16em, 0.12em);
+}
+.cover__name--blue {
+  color: var(--accent-2);
+  transform: translate(0.16em, -0.1em);
+}
+.is-loaded .cover__name--red { transform: translate(-0.045em, 0.035em); }
+.is-loaded .cover__name--blue { transform: translate(0.045em, -0.035em); }
+
+/* ---------- 3. Burst: thwack pop + idle breathe ---------- */
+.fx-anim .burst {
+  opacity: 0;
+  transform: scale(0.35) rotate(10deg);
+  transition:
+    transform var(--dur) var(--ease-thwack),
+    opacity var(--dur-fast) linear;
+  will-change: transform;
+}
+.fx-anim .panel .burst { transition-delay: 220ms; }
+.is-loaded .burst {
+  opacity: 1;
+  transform: none;
+  animation: burst-breathe 3.6s ease-in-out 1.4s infinite;
+}
+.is-loaded .panel:not(.is-inview) .burst {
+  opacity: 0;
+  transform: scale(0.35) rotate(10deg);
+  animation: none;
+}
+@keyframes burst-breathe {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.035) rotate(-0.8deg); }
+}
+
+/* ---------- 4. Panel wash-in, tilt vars, stagger ---------- */
+.fx-anim .panel {
+  opacity: 0;
+  transform: perspective(1100px) translateY(34px) scale(0.96)
+             rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition:
+    transform var(--dur) var(--ease-snap),
+    opacity var(--dur) linear;
+  will-change: transform, opacity;
+}
+.fx-anim .panel.is-inview {
+  opacity: 1;
+  transform: perspective(1100px)
+             rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+.fx-anim [data-stagger] > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    transform var(--dur) var(--ease-snap),
+    opacity var(--dur) linear;
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+.fx-anim .is-inview [data-stagger] > *,
+.fx-anim [data-stagger].is-inview > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 5. Panel border self-draw (inline SVG rect with pathLength="1") ---------- */
+.panel__border {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: var(--line);
+  vector-effect: non-scaling-stroke;
+}
+.fx-anim .panel__border {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset calc(var(--dur-slow) * 1.5) var(--ease-ink) 120ms;
+}
+.fx-anim .is-inview .panel__border {
+  stroke-dashoffset: 0;
+}
+
+/* ---------- 6. Scroll-driven camera (progressive enhancement, Chromium only) ---------- */
+@supports (animation-timeline: view()) {
+  .panel {
+    animation: panel-camera linear both;
+    animation-timeline: view();
+    animation-range: entry 20% exit 80%;
+  }
+  .panel:nth-of-type(even) {
+    animation-name: panel-camera-alt;
+    animation-timeline: view();
+  }
+  @keyframes panel-camera {
+    from { translate: 0 2.2%;  rotate: 0.55deg; }
+    50%  { translate: 0 0;     rotate: 0deg; }
+    to   { translate: 0 -2.2%; rotate: -0.55deg; }
+  }
+  @keyframes panel-camera-alt {
+    from { translate: 0 2.2%;  rotate: -0.55deg; }
+    50%  { translate: 0 0;     rotate: 0deg; }
+    to   { translate: 0 -2.2%; rotate: 0.55deg; }
+  }
+}
+
+/* ---------- 7. Halftone parallax layer (JS writes --scroll-y, --mx, --my on html) ---------- */
+.halftone-layer {
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(
+    calc(var(--mx, 0) * -18px),
+    calc(var(--scroll-y, 0) * -0.05px + var(--my, 0) * -12px),
+    0
+  );
+}
+
+/* ---------- 8. Typewriter caret ---------- */
+.is-typing::after {
+  content: "";
+  display: inline-block;
+  width: 0.5ch;
+  height: 0.95em;
+  margin-left: 0.08em;
+  vertical-align: text-bottom;
+  background: var(--ink);
+  animation: caret-blink 0.85s steps(1, end) infinite;
+}
+@keyframes caret-blink {
+  0%, 55%   { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
+/* ---------- 9. Ink cursor (elements are created by JS, so no-JS pages never see them) ---------- */
+.fx-cursor,
+.fx-cursor * { cursor: none; }
+.ink-cursor,
+.ink-cursor__trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9990;
+  will-change: transform;
+}
+.ink-cursor {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+  mix-blend-mode: difference;
+}
+.ink-cursor__trail {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: var(--line-hair) solid var(--ink);
+  opacity: 0.8;
+}
+@media (hover: none), (pointer: coarse) {
+  .ink-cursor,
+  .ink-cursor__trail { display: none; }
+}
+
+/* ---------- 10. Issue page turn (parent .issues holds the 3D stage) ---------- */
+.issues {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+.fx-anim .issue {
+  opacity: 0;
+  transform: rotateY(-6deg) translateX(12px);
+  transform-origin: left center;
+  transition:
+    transform var(--dur-slow) var(--ease-ink),
+    opacity var(--dur-slow) linear;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+.fx-anim .issue.is-inview {
+  opacity: 1;
+  transform: rotateY(0deg) translateX(0);
+}
+
+/* ---------- 11. Button press: shove toward the drop shadow ---------- */
+.btn {
+  transition: transform var(--dur-fast) var(--ease-snap);
+  will-change: transform;
+}
+/* press mechanics live in panels.css, which uses the translate property */
+
+/* ---------- 12. Reduced motion: everything off, everything visible ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .fx-anim .panel,
+  .fx-anim .issue,
+  .fx-anim .burst,
+  .fx-anim [data-stagger] > *,
+  .cover__name .letter,
+  .cover__name--red,
+  .cover__name--blue,
+  .halftone-layer,
+  .btn {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .fx-anim .panel__border {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .ink-cursor,
+  .ink-cursor__trail { display: none !important; }
+  #preloader { display: none !important; }
+  .is-typing::after { content: none !important; }
+}

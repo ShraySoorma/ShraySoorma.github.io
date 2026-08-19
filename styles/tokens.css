@@ -1,0 +1,80 @@
+/* Golden Age comic tokens. Single source of truth for color, type, geometry. */
+
+:root {
+  /* Newsprint ground */
+  --paper:        #f4e6c8;
+  --paper-deep:   #e8d5ad;
+  --paper-edge:   #d9c295;
+
+  /* Process inks */
+  --ink:          #12100e;
+  --ink-soft:     #3a332c;
+  --red:          #d92f26;
+  --red-deep:     #9e1d18;
+  --yellow:       #f6c026;
+  --yellow-deep:  #d99b0e;
+  --blue:         #1f5fbf;
+  --blue-deep:    #143f80;
+  --cyan:         #37b6d9;
+
+  /* Villain variant, swapped by [data-variant="villain"] */
+  --accent:       var(--red);
+  --accent-2:     var(--blue);
+
+  /* Halftone */
+  --dot-size:     7px;
+  --dot-color:    rgba(217, 47, 38, 0.30);
+  --dot-color-2:  rgba(31, 95, 191, 0.22);
+
+  /* Ink line weights */
+  --line-hair:    2px;
+  --line:         4px;
+  --line-bold:    7px;
+  --line-heavy:   11px;
+
+  /* Type */
+  --font-display: "Bangers", "Impact", "Haettenschweiler", sans-serif;
+  --font-body:    "Nunito Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --tracking-display: 0.02em;
+
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.92rem);
+  --step-0:  clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --step-1:  clamp(1.3rem, 1.18rem + 0.6vw, 1.7rem);
+  --step-2:  clamp(1.8rem, 1.5rem + 1.4vw, 2.8rem);
+  --step-3:  clamp(2.6rem, 1.9rem + 3.2vw, 5rem);
+  --step-4:  clamp(3.6rem, 2rem + 7vw, 9rem);
+
+  /* Geometry */
+  --gutter:       clamp(14px, 2.2vw, 30px);
+  --page-pad:     clamp(16px, 4vw, 64px);
+  --measure:      68ch;
+  --radius:       3px;
+  --shadow-panel: 8px 8px 0 var(--ink);
+  --shadow-pop:   14px 14px 0 var(--ink);
+
+  /* Motion */
+  --ease-snap:    cubic-bezier(0.2, 0.9, 0.15, 1.06);
+  --ease-ink:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-thwack:  cubic-bezier(0.34, 1.7, 0.44, 1);
+  --dur-fast:     180ms;
+  --dur:          420ms;
+  --dur-slow:     820ms;
+}
+
+:root[data-variant="villain"] {
+  --paper:      #1a1622;
+  --paper-deep: #241d30;
+  --paper-edge: #0f0c15;
+  --ink:        #f2ecdf;
+  --ink-soft:   #cfc4b4;
+  --accent:     #b026ff;
+  --accent-2:   #26ffd0;
+  --dot-color:  rgba(176, 38, 255, 0.32);
+  --dot-color-2: rgba(38, 255, 208, 0.20);
+  --shadow-panel: 8px 8px 0 #b026ff;
+  --shadow-pop:   14px 14px 0 #b026ff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 1ms; --dur: 1ms; --dur-slow: 1ms; }
+}
