@@ -1,0 +1,79 @@
+/* The tube: scanlines, glow, vignette, flicker, and the boot overlay.
+   All of it is decorative and all of it switches off under reduced motion. */
+
+.rain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+.crt {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.16) 0 1px,
+      transparent 1px 3px
+    );
+  mix-blend-mode: multiply;
+}
+
+/* phosphor bloom and the darkened corners of a curved tube */
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%,
+      transparent 68%,
+      rgba(0, 0, 0, 0.22) 92%,
+      rgba(0, 0, 0, 0.46) 100%);
+}
+
+/* a very slow brightness drift, the tube warming */
+@media (prefers-reduced-motion: no-preference) {
+  .crt { animation: flicker 7.5s steps(60) infinite; }
+  @keyframes flicker {
+    0%, 96%  { opacity: 1; }
+    97%      { opacity: 0.86; }
+    98%      { opacity: 1; }
+    99%      { opacity: 0.92; }
+    100%     { opacity: 1; }
+  }
+}
+
+/* ============ boot ============ */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(16px, 5vh, 60px);
+  background-color: var(--bg);
+  transition: opacity 300ms linear;
+}
+.boot.is-gone { opacity: 0; pointer-events: none; }
+
+.boot__log { color: var(--green); font-size: var(--fs); text-shadow: var(--glow-soft); }
+.boot__line { margin: 0; }
+.boot__skip {
+  margin-block-start: 1.4em;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* nothing to skip when the crawl never plays */
+@media (prefers-reduced-motion: reduce) {
+  .boot { display: none; }
+}

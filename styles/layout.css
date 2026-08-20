@@ -1,0 +1,160 @@
+/* Reset, the pane grid, and pane chrome. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-block-size: 100svh;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: var(--fs);
+  line-height: var(--lh);
+  overflow: hidden;
+}
+
+h1, h2, h3, p, ul, ol, figure, table { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input { font: inherit; color: inherit; }
+table { border-collapse: collapse; }
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  translate: -50% -140%;
+  z-index: 120;
+  padding: 0.5em 1em;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--green);
+  color: var(--green);
+  text-decoration: none;
+}
+.skip-link:focus-visible { translate: -50% 0; }
+
+/* ============ the window manager ============ */
+.wm {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(160px, 15vw) minmax(0, 1fr) minmax(200px, 20vw);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "bar  bar  bar"
+    "nav  main proc"
+    "ps1  ps1  ps1";
+  gap: var(--pane-gap);
+  padding: var(--pane-gap);
+  block-size: 100svh;
+}
+
+/* ============ title bar ============ */
+.bar {
+  grid-area: bar;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.35em 0.7em;
+  border: 1px solid var(--rule);
+  background-color: var(--bg-pane);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+.bar__id { color: var(--green); text-shadow: var(--glow-soft); }
+.bar__sep { color: var(--fg-faint); }
+.bar__path { color: var(--fg); }
+.bar__spacer { flex: 1; }
+.bar__meta { color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+.bar__dots { display: inline-flex; gap: 5px; }
+.bar__dots i { inline-size: 8px; block-size: 8px; border: 1px solid var(--rule-bright); border-radius: 50%; }
+.bar__dots i:last-child { background-color: var(--green); box-shadow: var(--glow-soft); }
+
+/* ============ panes ============ */
+.pane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  border: 1px solid var(--rule);
+  background-color: color-mix(in srgb, var(--bg-pane) 78%, transparent);
+}
+.pane--nav  { grid-area: nav; }
+.pane--main { grid-area: main; }
+.pane--proc { grid-area: proc; }
+
+.pane__title {
+  flex: none;
+  padding: 0.2em 0.7em;
+  border-block-end: 1px solid var(--rule);
+  background-color: var(--bg-raised);
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.pane__body {
+  flex: 1;
+  min-block-size: 0;
+  padding: var(--pad);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-bright) transparent;
+}
+.pane__body::-webkit-scrollbar { inline-size: 8px; block-size: 8px; }
+.pane__body::-webkit-scrollbar-thumb { background-color: var(--rule-bright); }
+.pane__body::-webkit-scrollbar-track { background: transparent; }
+
+.pane--proc .pane__body { display: flex; flex-direction: column; gap: 0.8em; overflow: hidden; }
+
+/* ============ narrow: one column, side panes gone ============ */
+@media (max-width: 900px) {
+  /* one column that flows, rather than three panes each with its own
+     scrollbar. Trapping the nav in a fixed box hid half its entries. */
+  body { overflow: auto; }
+  .wm {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas: "bar" "nav" "main" "ps1";
+    block-size: auto;
+    min-block-size: 100svh;
+  }
+  .pane--proc { display: none; }
+
+  .pane--nav .pane__body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em 1.1em;
+    align-items: baseline;
+    max-block-size: none;
+    overflow: visible;
+  }
+  .pane--nav .nav__list { display: contents; }
+  .pane--nav .nav__group { inline-size: 100%; margin-block: 0.5em 0; }
+
+  .pane--main { min-block-size: 60svh; }
+  .pane--main .pane__body { overflow: visible; }
+
+  /* the prompt stays reachable no matter how long the output runs */
+  .prompt {
+    position: sticky;
+    inset-block-end: var(--pane-gap);
+    z-index: 4;
+  }
+}

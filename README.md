@@ -1,6 +1,6 @@
 # shraysoorma.github.io
 
-Personal developer page, built as an actual comic book: an open comic lying on a table, two facing pages at a time, scrolling turns the leaves. Static, no build step, no dependencies, no frameworks.
+Personal developer page as a green phosphor terminal. A tiled hacker desktop with a prompt you can actually type into. Static, no build step, no dependencies, no frameworks.
 
 Live at https://shraysoorma.github.io
 
@@ -14,22 +14,20 @@ Then open http://localhost:4173
 
 ## Editing
 
-All content lives in `scripts/data.js`. Change the copy there, not in `index.html`.
+All content lives in `scripts/data.js`. Change the copy there, nothing else.
 
-- `SITE.links` is the contact panel. Confirm the LinkedIn URL, and see the note there for adding a resume PDF.
-- `PROJECTS` is the lineup. Each project becomes its own page, so adding one adds a page.
-- `AUTHOR` is the cover tagline, origin story, and the arsenal groups.
+- `SITE.links` is `contact.txt`. Confirm the LinkedIn URL, and see the note there for adding a resume.
+- `PROJECTS` becomes `~/projects/*.md`. Adding an entry adds a file, a nav item and a tab completion with no other edits.
+- `AUTHOR` is `about.md` (tagline, origin, the quote) and `arsenal.txt` (the grouped stack).
 
-## How the book works
+## How it works
 
-`scripts/book.js` builds the book out of the `.page` sections in `index.html`. Leaf k carries page 2k on its front and page 2k+1 on its back, so turning one sheet swaps both halves of the spread the way paper does. The reading order is cover, then origin facing the first project, and so on to the arsenal facing the letters page.
+`scripts/fs.js` builds a small virtual filesystem out of `data.js`. `scripts/shell.js` parses a line, runs a built-in, and hands `scripts/render.js` a result to turn into output. Nav entries carry a `data-cmd` and call `Shell.run` with the exact string a visitor would have typed, so clicking and typing are one code path rather than two that can drift.
 
-It never hijacks scrolling: `.book__rail` provides one screen of real scroll height per turn, and the controller only maps scroll position onto a `--turn` value per leaf that CSS reads. Scroll sets a target and the rendered value chases it each frame rather than tracking raw scroll, so a chunky wheel notch does not step the sheet over in visible jumps. The damping is against elapsed time, not frame count, so the book feels the same on a 120Hz screen as on a 60Hz one. The scrollbar, keyboard, trackpad, and touch all behave normally. In page anchors are translated to the spread that holds them, since a fixed leaf has nothing for a `#hash` to scroll to.
+Commands: `help`, `ls`, `cd`, `cat`, `open`, `whoami`, `arsenal`, `contact`, `neofetch`, `clear`, and one easter egg. Up and down walk history, Tab completes to the longest unambiguous prefix, Ctrl+L clears. `cat charlore` resolves from anywhere, not just from inside `~/projects`.
 
-Everything on a page is sized in `--pu`, one hundredth of a page height, so the spread scales as one piece at any window size instead of being tuned for one and cramped at the rest.
+`scripts/ambient.js` runs the matrix rain, the code stream and the fake process readout. All of it is `aria-hidden`, pauses when the tab is hidden, and switches off under `prefers-reduced-motion` or below 900px. `scripts/boot.js` plays the POST crawl once per session, is skippable with any key, and has a hard ceiling so it can only ever delay the desktop, never prevent it.
 
-Book mode is opt in per viewport. `book.js` adds `html.fx-book` only when the window is at least 900px wide and 640px tall and the reader has not asked for reduced motion. Without it the leaf wrappers collapse with `display: contents` and the pages render as ordinary stacked sections, which is the vertical scrolling comic, so phones and short windows never clip a page.
+Below 900px the side panes drop and the whole thing becomes one flowing column with a sticky prompt.
 
-Styling splits across `styles/`: `tokens.css` holds every color and size variable, `panels.css` the comic furniture, `parts.css` the remaining components, `animations.css` all motion, `book.css` the pagination. Motion is fully disabled under `prefers-reduced-motion`, and the page stays readable with JavaScript off.
-
-Press the konami code on the live page.
+Styling splits across `styles/`: `tokens.css` holds every colour and size, `layout.css` the pane grid, `terminal.css` the prompt and output blocks, `crt.css` the scanlines and glow. Full phosphor `#00ff41` is reserved for the prompt, headings and accents; body copy uses a dimmed green so a screen of project text stays readable.

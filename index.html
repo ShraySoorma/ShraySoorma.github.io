@@ -1,159 +1,101 @@
 <!doctype html>
-<html lang="en" data-variant="hero">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shray Soorma // Issue #1</title>
-<meta name="description" content="Shray Soorma, full-stack engineer. Six projects, shipped solo: AI video production, client pipelines, native macOS apps, and automation.">
-<meta name="color-scheme" content="light">
+<title>shray@soorma:~$</title>
+<meta name="description" content="Shray Soorma, full-stack engineer. Charlore, HeartyPot, dezignrco. A terminal you can actually type into.">
+<meta name="color-scheme" content="dark">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Shray Soorma // Issue #1">
-<meta property="og:description" content="Full-stack engineer. Six projects, shipped solo.">
+<meta property="og:title" content="shray@soorma:~$">
+<meta property="og:description" content="Full-stack engineer. Ships whole products solo.">
 <meta property="og:url" content="https://shraysoorma.github.io">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito+Sans:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles/tokens.css">
-<link rel="stylesheet" href="styles/base.css">
-<link rel="stylesheet" href="styles/panels.css">
-<link rel="stylesheet" href="styles/parts.css">
-<link rel="stylesheet" href="styles/animations.css">
-<link rel="stylesheet" href="styles/book.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/terminal.css">
+<link rel="stylesheet" href="styles/crt.css">
 </head>
 <body>
 
-<!-- ============ preloader: the cover tears open ============ -->
-<div id="preloader" aria-hidden="true">
-  <div class="preloader__half preloader__half--l">
-    <div class="preloader__face"><span class="preloader__mark">SS</span><span class="preloader__no">No. 1</span></div>
-  </div>
-  <div class="preloader__half preloader__half--r">
-    <div class="preloader__face"><span class="preloader__mark">SS</span><span class="preloader__no">No. 1</span></div>
-  </div>
-  <div class="preloader__seam"></div>
+<canvas id="rain" class="rain" aria-hidden="true" hidden></canvas>
+<div class="crt" aria-hidden="true"></div>
+
+<div id="boot" class="boot">
+  <div class="boot__log" aria-hidden="true"></div>
+  <p class="boot__skip">press any key to skip</p>
 </div>
 
-<!-- ============ print furniture ============ -->
-<div class="paper-grain" aria-hidden="true"></div>
-<div class="halftone-layer" aria-hidden="true"></div>
+<a class="skip-link" href="#prompt">Skip to the command prompt</a>
 
-<a class="skip-link" href="#p-charlore">Skip to the projects</a>
+<div class="wm">
 
-<div class="book">
-<div class="book__stage">
+  <header class="bar" role="banner">
+    <span class="bar__id">shray@soorma</span>
+    <span class="bar__sep" aria-hidden="true">::</span>
+    <span class="bar__path" id="bar-path">~</span>
+    <span class="bar__spacer"></span>
+    <span class="bar__meta" id="bar-clock" aria-hidden="true"></span>
+    <span class="bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+  </header>
 
-<!-- ============ page 0: cover ============ -->
-<section class="page page--cover" id="cover" aria-label="Cover">
-  <div class="cover">
-    <span class="cover__issue">No. 1</span>
-    <span class="cover__price">10&cent;</span>
-    <span class="cover__date">Soorma Comics</span>
-
-    <div class="cover__stack">
-      <p class="caption-box cover__kicker">Meanwhile, in the terminal&hellip;</p>
-
-      <h1 class="cover__name-wrap">
-        <span class="cover__line">
-          <span class="cover__name cover__name--red" aria-hidden="true">Shray</span>
-          <span class="cover__name cover__name--blue" aria-hidden="true">Shray</span>
-          <span class="cover__name">Shray</span>
-        </span>
-        <span class="cover__line">
-          <span class="cover__name cover__name--red" aria-hidden="true">Soorma</span>
-          <span class="cover__name cover__name--blue" aria-hidden="true">Soorma</span>
-          <span class="cover__name">Soorma</span>
-        </span>
-      </h1>
-
-      <p class="cover__tagline" id="cover-tagline">Full-stack engineer</p>
-
-      <nav class="cover__cta" aria-label="Primary">
-        <a class="btn btn--primary" href="#p-charlore">See the lineup</a>
-        <a class="btn btn--ghost" href="#contact">Get in touch</a>
-      </nav>
+  <nav class="pane pane--nav" aria-label="Sections">
+    <h2 class="pane__title">nav</h2>
+    <div class="pane__body">
+      <p class="nav__group">~/projects</p>
+      <ul class="nav__list" id="nav-projects"></ul>
+      <p class="nav__group">~</p>
+      <ul class="nav__list">
+        <li><button class="ent" data-cmd="whoami">about.md</button></li>
+        <li><button class="ent" data-cmd="arsenal">arsenal.txt</button></li>
+        <li><button class="ent" data-cmd="contact">contact.txt</button></li>
+      </ul>
+      <p class="nav__group">builtins</p>
+      <ul class="nav__list">
+        <li><button class="ent" data-cmd="help">help</button></li>
+        <li><button class="ent" data-cmd="neofetch">neofetch</button></li>
+        <li><button class="ent" data-cmd="clear">clear</button></li>
+      </ul>
     </div>
+  </nav>
 
-    <div class="burst cover__burst" aria-hidden="true"><span class="burst__word">POW!</span></div>
-    <a class="cover__scroll" href="#origin">Turn the page</a>
-  </div>
-  <span class="page__folio" aria-hidden="true">Cover</span>
-</section>
+  <main class="pane pane--main">
+    <h2 class="pane__title">main</h2>
+    <div class="pane__body out-scroll" id="out" role="log" aria-live="polite" aria-label="Command output"></div>
+  </main>
 
-<!-- ============ page 1: origin ============ -->
-<section class="page" id="origin" aria-labelledby="origin-title">
-  <div class="page__inner">
-    <div class="issue__header">
-      <h2 class="page-title" id="origin-title" data-text="Origin Story">Origin Story</h2>
+  <aside class="pane pane--proc" aria-hidden="true">
+    <h2 class="pane__title">proc</h2>
+    <div class="pane__body">
+      <div class="stats" id="stats"></div>
+      <div class="stream" id="stream"></div>
     </div>
-    <div class="strip strip--two">
-      <article class="panel" style="--rot:-0.5deg">
-        <span class="panel__num">1</span>
-        <div class="panel__body">
-          <p class="caption-box">Every engineer has an origin.</p>
-          <div class="panel__prose" id="origin-prose" data-stagger></div>
-        </div>
-      </article>
-      <article class="panel" style="--rot:0.8deg">
-        <div class="panel__media" aria-hidden="true"></div>
-        <div class="bubble bubble--right">
-          <p id="origin-bubble" data-typewriter></p>
-          <span class="bubble__tail" aria-hidden="true"></span>
-        </div>
-      </article>
-    </div>
-  </div>
-  <span class="page__folio" aria-hidden="true">Page 1</span>
-</section>
+  </aside>
 
-<!-- ============ pages 2 to 4: one project per page, built by panels.js ============ -->
-<div id="project-pages" hidden></div>
+  <form class="prompt" id="prompt-form">
+    <label class="prompt__ps1" for="prompt" id="ps1">shray@soorma:~$</label>
+    <input class="prompt__input" id="prompt" name="prompt" type="text"
+           autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+           aria-describedby="prompt-hint">
+    <span class="prompt__caret" aria-hidden="true"></span>
+    <span class="sr-only" id="prompt-hint">Type a command such as help, ls, or cat charlore. Use the up arrow for history and tab to complete.</span>
+  </form>
 
-<!-- ============ page 5: arsenal ============ -->
-<section class="page" id="arsenal" aria-labelledby="arsenal-title">
-  <div class="page__inner">
-    <div class="issue__header">
-      <h2 class="page-title" id="arsenal-title" data-text="The Arsenal">The Arsenal</h2>
-      <p class="issue__dek">The tools I reach for.</p>
-    </div>
-    <div class="strip strip--arsenal" id="arsenal-strip"></div>
-  </div>
-  <span class="page__folio" aria-hidden="true">Page 5</span>
-</section>
-
-<!-- ============ page 6: last page ============ -->
-<section class="page page--final" id="contact" aria-labelledby="contact-title">
-  <div class="page__inner">
-    <div class="issue__header">
-      <h2 class="page-title" id="contact-title" data-text="Next Issue">Next Issue</h2>
-    </div>
-    <article class="panel panel--splash" style="--rot:0deg">
-      <p class="caption-box">Letters page. Write in.</p>
-      <h3 class="panel__title panel__title--big">Let's build something.</h3>
-      <p class="panel__logline">Open to full-stack and product engineering roles. Fastest way to reach me is email.</p>
-      <nav class="contact-grid" id="contact-grid" aria-label="Contact links"></nav>
-      <p class="to-be-continued" aria-hidden="true">To be continued...</p>
-    </article>
-    <footer class="colophon">
-      <p>Set in Bangers and Nunito Sans. Hand written HTML, CSS, and JavaScript. No frameworks, no build step.</p>
-      <p><span id="colophon-year"></span> Shray Soorma</p>
-    </footer>
-  </div>
-  <span class="page__folio" aria-hidden="true">Back cover</span>
-</section>
-
-</div><!-- /book__stage -->
-<div class="book__rail" aria-hidden="true"></div>
-</div><!-- /book -->
+</div>
 
 <script src="scripts/data.js" defer></script>
-<script src="scripts/panels.js" defer></script>
-<script src="scripts/book.js" defer></script>
+<script src="scripts/fs.js" defer></script>
+<script src="scripts/render.js" defer></script>
+<script src="scripts/shell.js" defer></script>
+<script src="scripts/ambient.js" defer></script>
+<script src="scripts/boot.js" defer></script>
 <script src="scripts/main.js" defer></script>
-<script src="scripts/fx.js" defer></script>
 </body>
 </html>
