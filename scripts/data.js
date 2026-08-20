@@ -4,15 +4,13 @@ window.SITE = {
   name: 'Shray Soorma',
   url: 'https://shraysoorma.github.io',
 
-  /* TODO Shray:
-     1. Confirm the LinkedIn URL below is right.
-     2. To add your resume, drop the PDF at assets/resume.pdf and uncomment this line:
-        { label: 'Resume', value: 'Download PDF', href: 'assets/resume.pdf' },
+  /* To add your resume, drop the PDF at assets/resume.pdf and uncomment:
+       { label: 'Resume', value: 'Download PDF', href: 'assets/resume.pdf' },
      It is left out for now so the page does not ship a dead link. */
   links: [
     { label: 'Email',    value: 'shray.soorma@gmail.com',      href: 'mailto:shray.soorma@gmail.com', primary: true },
     { label: 'GitHub',   value: 'github.com/ShraySoorma',      href: 'https://github.com/ShraySoorma' },
-    { label: 'LinkedIn', value: 'linkedin.com/in/shraysoorma', href: 'https://www.linkedin.com/in/shraysoorma/' },
+    { label: 'LinkedIn', value: 'linkedin.com/in/shray-soorma', href: 'https://www.linkedin.com/in/shray-soorma/' },
     { label: 'Studio',   value: 'dezignrco.com',               href: 'https://dezignrco.com' },
     { label: 'Product',  value: 'charlore.ai',                 href: 'https://charlore.ai' }
   ]
