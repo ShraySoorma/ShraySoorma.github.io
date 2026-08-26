@@ -8,7 +8,7 @@ window.SITE = {
        { label: 'Resume', value: 'Download PDF', href: 'assets/resume.pdf' },
      It is left out for now so the page does not ship a dead link. */
   links: [
-    { label: 'Email',    value: 'shray.soorma@gmail.com',      href: 'mailto:shray.soorma@gmail.com', primary: true },
+    { label: 'Email',    value: 'shraysoorma27@gmail.com',     href: 'mailto:shraysoorma27@gmail.com', primary: true },
     { label: 'GitHub',   value: 'github.com/ShraySoorma',      href: 'https://github.com/ShraySoorma' },
     { label: 'LinkedIn', value: 'linkedin.com/in/shray-soorma', href: 'https://www.linkedin.com/in/shray-soorma/' },
     { label: 'Studio',   value: 'dezignrco.com',               href: 'https://dezignrco.com' },
