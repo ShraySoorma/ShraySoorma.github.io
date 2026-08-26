@@ -63,7 +63,7 @@
 }
 .boot.is-gone { opacity: 0; pointer-events: none; }
 
-.boot__log { color: var(--green); font-size: var(--fs); text-shadow: var(--glow-soft); }
+.boot__log { color: var(--bright); font-size: var(--fs); text-shadow: var(--glow-soft); }
 .boot__line { margin: 0; }
 .boot__skip {
   margin-block-start: 1.4em;

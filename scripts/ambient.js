@@ -39,15 +39,15 @@
     function frame() {
       raf = 0;
       if (!rainOn) return;
-      ctx.fillStyle = 'rgba(5, 8, 5, 0.09)';
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.09)';
       ctx.fillRect(0, 0, w, h);
       for (var i = 0; i < cols.length; i++) {
         var x = i * size;
         var y = cols[i] * size;
         var ch = GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
-        ctx.fillStyle = 'rgba(0, 255, 65, 0.85)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.fillText(ch, x, y);
-        ctx.fillStyle = 'rgba(0, 255, 65, 0.18)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
         ctx.fillText(GLYPHS.charAt((Math.random() * GLYPHS.length) | 0), x, y - size * 2);
         if (y > h && Math.random() > 0.975) cols[i] = 0;
         cols[i] += 1;

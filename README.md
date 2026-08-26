@@ -1,6 +1,6 @@
 # shraysoorma.github.io
 
-Personal developer page as a green phosphor terminal. A tiled hacker desktop with a prompt you can actually type into. Static, no build step, no dependencies, no frameworks.
+Personal developer page as a monochrome phosphor terminal. A tiled hacker desktop with a prompt you can actually type into. Static, no build step, no dependencies, no frameworks.
 
 Live at https://shraysoorma.github.io
 
@@ -30,4 +30,4 @@ Commands: `help`, `ls`, `cd`, `cat`, `open`, `whoami`, `arsenal`, `contact`, `ne
 
 Below 900px the side panes drop and the whole thing becomes one flowing column with a sticky prompt.
 
-Styling splits across `styles/`: `tokens.css` holds every colour and size, `layout.css` the pane grid, `terminal.css` the prompt and output blocks, `crt.css` the scanlines and glow. Full phosphor `#00ff41` is reserved for the prompt, headings and accents; body copy uses a dimmed green so a screen of project text stays readable.
+Styling splits across `styles/`: `tokens.css` holds every colour and size, `layout.css` the pane grid, `terminal.css` the prompt and output blocks, `crt.css` the scanlines and glow. Full phosphor `#ffffff` is reserved for the prompt, headings and accents; body copy uses a dimmed grey so a screen of project text stays readable. With no hue in the palette, err and warn output is marked `[x]` and `[!]` in text.

@@ -1,31 +1,31 @@
-/* Phosphor terminal. One place for every colour, size and glow. */
+/* Monochrome terminal. One place for every colour, size and glow. */
 
 :root {
   /* the tube */
-  --bg:          #050805;
-  --bg-pane:     #070c07;
-  --bg-raised:   #0b120b;
-  --bg-select:   #0f2a14;
+  --bg:          #050505;
+  --bg-pane:     #0a0a0a;
+  --bg-raised:   #121212;
+  --bg-select:   #2a2a2a;
 
   /* phosphor. Full brightness is for the prompt, headings and accents.
      Long-form copy uses --fg, which still clears AA on --bg. */
-  --green:       #00ff41;
-  --fg:          #7dffa4;
-  --fg-dim:      #4fbf72;
-  --fg-faint:    #2a7a44;
-  --fg-ghost:    #163d22;
+  --bright:      #ffffff;
+  --fg:          #c8c8c8;
+  --fg-dim:      #8a8a8a;
+  --fg-faint:    #565656;
+  --fg-ghost:    #2e2e2e;
 
-  /* the few non-green signals a terminal earns */
-  --amber:       #ffb000;
-  --cyan:        #45f0e0;
-  --red:         #ff4d4d;
+  /* status now reads by brightness and a text marker, not by hue */
+  --amber:       #bdbdbd;
+  --cyan:        #9a9a9a;
+  --red:         #ffffff;
 
-  --rule:        #123a1c;
-  --rule-bright: #1e6b31;
+  --rule:        #262626;
+  --rule-bright: #4a4a4a;
 
-  --glow:        0 0 6px rgba(0, 255, 65, 0.45);
-  --glow-soft:   0 0 3px rgba(0, 255, 65, 0.28);
-  --glow-strong: 0 0 12px rgba(0, 255, 65, 0.65);
+  --glow:        0 0 6px rgba(255, 255, 255, 0.32);
+  --glow-soft:   0 0 3px rgba(255, 255, 255, 0.20);
+  --glow-strong: 0 0 12px rgba(255, 255, 255, 0.45);
 
   /* type */
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;

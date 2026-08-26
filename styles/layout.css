@@ -29,7 +29,7 @@ table { border-collapse: collapse; }
 }
 
 :focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--bright);
   outline-offset: 2px;
 }
 
@@ -41,8 +41,8 @@ table { border-collapse: collapse; }
   z-index: 120;
   padding: 0.5em 1em;
   background-color: var(--bg-raised);
-  border: 1px solid var(--green);
-  color: var(--green);
+  border: 1px solid var(--bright);
+  color: var(--bright);
   text-decoration: none;
 }
 .skip-link:focus-visible { translate: -50% 0; }
@@ -75,14 +75,14 @@ table { border-collapse: collapse; }
   font-size: var(--fs-sm);
   color: var(--fg-dim);
 }
-.bar__id { color: var(--green); text-shadow: var(--glow-soft); }
+.bar__id { color: var(--bright); text-shadow: var(--glow-soft); }
 .bar__sep { color: var(--fg-faint); }
 .bar__path { color: var(--fg); }
 .bar__spacer { flex: 1; }
 .bar__meta { color: var(--fg-faint); font-variant-numeric: tabular-nums; }
 .bar__dots { display: inline-flex; gap: 5px; }
 .bar__dots i { inline-size: 8px; block-size: 8px; border: 1px solid var(--rule-bright); border-radius: 50%; }
-.bar__dots i:last-child { background-color: var(--green); box-shadow: var(--glow-soft); }
+.bar__dots i:last-child { background-color: var(--bright); box-shadow: var(--glow-soft); }
 
 /* ============ panes ============ */
 .pane {

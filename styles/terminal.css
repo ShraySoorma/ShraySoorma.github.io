@@ -16,10 +16,10 @@
   transition: color var(--dur) var(--ease), text-shadow var(--dur) var(--ease);
 }
 .ent::before { content: "› "; color: var(--fg-faint); }
-.ent:hover, .ent:focus-visible { color: var(--green); text-shadow: var(--glow); }
-.ent:hover::before, .ent:focus-visible::before { color: var(--green); }
+.ent:hover, .ent:focus-visible { color: var(--bright); text-shadow: var(--glow); }
+.ent:hover::before, .ent:focus-visible::before { color: var(--bright); }
 .ent--dir { color: var(--cyan); }
-.ent--cmd { color: var(--green); }
+.ent--cmd { color: var(--bright); }
 .ent--cmd::before, .ent--file::before { content: none; }
 
 /* ============ output ============ */
@@ -33,11 +33,15 @@
 
 .out--echo { margin-block-end: 0.5em; }
 .ps1 { color: var(--fg-faint); }
-.cmd { color: var(--green); text-shadow: var(--glow-soft); }
+.cmd { color: var(--bright); text-shadow: var(--glow-soft); }
 
 .out--dim p { color: var(--fg-dim); }
-.out--err p { color: var(--red); }
+.out--err p { color: var(--red); text-shadow: var(--glow-soft); }
 .out--warn p { color: var(--amber); }
+
+/* with no hue left to carry it, err and warn announce themselves in text */
+.out--err p:first-child::before  { content: "[x] "; }
+.out--warn p:first-child::before { content: "[!] "; }
 .muted { color: var(--fg-faint); }
 .hint { color: var(--fg-faint); font-size: var(--fs-xs); }
 
@@ -52,7 +56,7 @@
 /* file header */
 .fh { display: flex; align-items: baseline; gap: 0.8em; flex-wrap: wrap; }
 .fh__name {
-  color: var(--green);
+  color: var(--bright);
   font-size: var(--fs-lg);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -66,7 +70,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.fh__status[data-status="live"]         { color: var(--green); }
+.fh__status[data-status="live"]         { color: var(--bright); }
 .fh__status[data-status="in build"]     { color: var(--amber); }
 .fh__status[data-status="daily driver"] { color: var(--cyan); }
 .fh__issue { color: var(--fg-faint); margin-block: 0.15em 0.7em; }
@@ -81,7 +85,7 @@
   content: "*";
   position: absolute;
   inset-inline-start: 0.2em;
-  color: var(--green);
+  color: var(--bright);
 }
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.35em; margin-block: 0.8em; }
@@ -93,8 +97,8 @@
 }
 
 .cta { margin-block-start: 0.6em; }
-.lnk { color: var(--green); text-decoration: none; border-block-end: 1px solid var(--rule-bright); }
-.lnk:hover, .lnk:focus-visible { text-shadow: var(--glow); border-block-end-color: var(--green); }
+.lnk { color: var(--bright); text-decoration: none; border-block-end: 1px solid var(--rule-bright); }
+.lnk:hover, .lnk:focus-visible { text-shadow: var(--glow); border-block-end-color: var(--bright); }
 .lnk__ext { color: var(--fg-faint); }
 
 /* key/value tables */
@@ -105,7 +109,7 @@
 /* arsenal */
 .grps { display: grid; grid-template-columns: repeat(auto-fit, minmax(20ch, 1fr)); gap: 1.1em 2em; }
 .grp__name {
-  color: var(--green);
+  color: var(--bright);
   font-size: var(--fs-sm);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -117,7 +121,7 @@
 
 /* neofetch */
 .fetch { display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap; }
-.fetch__art { color: var(--green); text-shadow: var(--glow); font-size: var(--fs-xs); line-height: 1.15; margin: 0; }
+.fetch__art { color: var(--bright); text-shadow: var(--glow); font-size: var(--fs-xs); line-height: 1.15; margin: 0; }
 
 /* ============ prompt ============ */
 .prompt {
@@ -136,18 +140,18 @@
   background: none;
   border: 0;
   outline: 0;
-  color: var(--green);
+  color: var(--bright);
   text-shadow: var(--glow-soft);
-  caret-color: var(--green);
+  caret-color: var(--bright);
 }
 .prompt__input::placeholder { color: var(--fg-ghost); }
-.prompt:focus-within { border-color: var(--green); box-shadow: 0 0 10px rgba(0, 255, 65, 0.18); }
+.prompt:focus-within { border-color: var(--bright); box-shadow: 0 0 10px rgba(255, 255, 255, 0.14); }
 
 .prompt__caret {
   flex: none;
   inline-size: 0.6em;
   block-size: 1.05em;
-  background-color: var(--green);
+  background-color: var(--bright);
   box-shadow: var(--glow);
   animation: blink 1.05s steps(1) infinite;
 }
@@ -158,7 +162,7 @@
 .stats { flex: none; display: grid; gap: 0.15em; }
 .stat { display: flex; justify-content: space-between; font-size: var(--fs-sm); }
 .stat__k { color: var(--fg-faint); }
-.stat__v { color: var(--green); font-variant-numeric: tabular-nums; }
+.stat__v { color: var(--bright); font-variant-numeric: tabular-nums; }
 
 .stream {
   flex: 1;
