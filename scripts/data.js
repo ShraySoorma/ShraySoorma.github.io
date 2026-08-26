@@ -128,6 +128,11 @@ window.AUTHOR = {
     "The pattern behind it all: find a manual workflow, then build the machine that runs it every day."
   ],
   "bubble": "If I have to do it twice, I build the machine that does it daily.",
+  "epigraph": {
+    "text": "Simplicity is prerequisite for reliability.",
+    "author": "Edsger W. Dijkstra",
+    "source": "EWD498, 1975"
+  },
   "arsenal": {
     "Languages": [
       "TypeScript",

@@ -86,7 +86,15 @@
       '<div class="fh"><span class="fh__name">' + esc(window.SITE ? window.SITE.name : 'about') + '</span></div>' +
       '<p class="lede">' + esc(a.tagline) + '</p>' +
       '<div class="prose">' + lines + '</div>' +
-      (a.bubble ? '<p class="quote">&gt; ' + esc(a.bubble) + '</p>' : '')
+      (a.bubble ? '<p class="quote">&gt; ' + esc(a.bubble) + '</p>' : '') +
+      (a.epigraph && a.epigraph.text
+        ? '<figure class="epi">' +
+            '<blockquote class="epi__text">' + esc(a.epigraph.text) + '</blockquote>' +
+            '<figcaption class="epi__by">&mdash; ' + esc(a.epigraph.author || '') +
+              (a.epigraph.source ? ' <span class="epi__src">' + esc(a.epigraph.source) + '</span>' : '') +
+            '</figcaption>' +
+          '</figure>'
+        : '')
     );
   }
 

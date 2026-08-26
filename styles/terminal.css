@@ -85,6 +85,22 @@
 .prose p { color: var(--fg-dim); }
 .quote { color: var(--fg-quiet); margin-block-start: 0.7em; }
 
+/* an epigraph, set apart from the personal line above it */
+.epi {
+  margin-block-start: 1.3em;
+  padding-inline-start: 1em;
+  border-inline-start: 2px solid var(--rule-bright);
+  max-inline-size: var(--measure);
+}
+.epi__text { margin: 0; color: var(--fg-dim); }
+.epi__by {
+  margin-block-start: 0.35em;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+}
+.epi__src { color: var(--fg-ghost); }
+
 .bul { margin-block: 0.7em; }
 .bul li { color: var(--fg); padding-inline-start: 1.4em; position: relative; }
 .bul li::before {
