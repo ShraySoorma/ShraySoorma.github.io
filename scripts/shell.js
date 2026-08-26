@@ -93,7 +93,7 @@
         ['user',    (window.SITE && window.SITE.name) || 'shray'],
         ['role',    a.tagline || ''],
         ['shell',   'soorma-sh 1.0'],
-        ['projects', count + ' shipped, more under NDA'],
+        ['projects', count + ' production shipped, more under NDA'],
         ['stack',   'typescript, rust, swift, sql'],
         ['contact', (window.SITE && window.SITE.links && window.SITE.links[0].value) || '']
       ].map(function (r) {
