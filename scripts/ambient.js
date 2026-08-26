@@ -15,6 +15,9 @@
 
   /* ---------- matrix rain ---------- */
 
+  /* rows per frame. A full glyph per frame read as static; this drifts. */
+  var SPEED = 0.22;
+
   var GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>/{}[]$#*+=';
 
   function initRain(canvas) {
@@ -39,7 +42,7 @@
     function frame() {
       raf = 0;
       if (!rainOn) return;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.09)';
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.035)';
       ctx.fillRect(0, 0, w, h);
       for (var i = 0; i < cols.length; i++) {
         var x = i * size;
@@ -50,7 +53,7 @@
         ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
         ctx.fillText(GLYPHS.charAt((Math.random() * GLYPHS.length) | 0), x, y - size * 2);
         if (y > h && Math.random() > 0.975) cols[i] = 0;
-        cols[i] += 1;
+        cols[i] += SPEED;
       }
       raf = window.requestAnimationFrame(frame);
     }

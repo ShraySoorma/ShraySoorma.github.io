@@ -48,7 +48,8 @@
 
   function project(p) {
     var tags = (p.stack || []).map(function (t) {
-      return '<span class="tag">' + esc(t) + '</span>';
+      var slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return '<span class="tag" data-tag="' + esc(slug) + '">' + esc(t) + '</span>';
     }).join('');
 
     var bullets = (p.highlights || []).map(function (h) {

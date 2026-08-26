@@ -97,10 +97,39 @@
 .tags { display: flex; flex-wrap: wrap; gap: 0.35em; margin-block: 0.8em; }
 .tag {
   padding: 0.05em 0.5em;
-  border: 1px solid var(--rule-bright);
-  color: var(--fg-dim);
+  border: 1px solid color-mix(in srgb, var(--tag, var(--rule-bright)) 50%, transparent);
+  color: var(--tag, var(--fg-dim));
   font-size: var(--fs-xs);
 }
+
+/* Each tool wears its own brand colour. This is the one block on the page
+   that breaks the two-hue rule on purpose: a stack list is a reference
+   grid, and recognition beats restraint here. Values are brightened where
+   needed to clear 4.5:1 on --bg, since tags render small. */
+.tag[data-tag="auth-js"] { --tag: #a78bfa; }
+.tag[data-tag="cloudflare-pages"] { --tag: #f38020; }
+.tag[data-tag="cloudinary"] { --tag: #6675d3; }
+.tag[data-tag="drizzle-orm"] { --tag: #c5f74f; }
+.tag[data-tag="elevenlabs"] { --tag: #d0d0d0; }
+.tag[data-tag="fal-ai"] { --tag: #f45bd0; }
+.tag[data-tag="ffmpeg"] { --tag: #5cb85c; }
+.tag[data-tag="mapkit"] { --tag: #3aa0ff; }
+.tag[data-tag="maplibre-gl"] { --tag: #3bb3a0; }
+.tag[data-tag="next-js"] { --tag: #ffffff; }
+.tag[data-tag="node-js"] { --tag: #5fa04e; }
+.tag[data-tag="postgis"] { --tag: #4c8b4c; }
+.tag[data-tag="postgresql"] { --tag: #517da1; }
+.tag[data-tag="prisma"] { --tag: #2dd4bf; }
+.tag[data-tag="qstash"] { --tag: #00e9a3; }
+.tag[data-tag="react"] { --tag: #61dafb; }
+.tag[data-tag="resend"] { --tag: #e6e6e6; }
+.tag[data-tag="stripe"] { --tag: #6a63ff; }
+.tag[data-tag="stripe-connect"] { --tag: #6a63ff; }
+.tag[data-tag="supabase"] { --tag: #3ecf8e; }
+.tag[data-tag="swiftui"] { --tag: #f05138; }
+.tag[data-tag="tailwind-css"] { --tag: #38bdf8; }
+.tag[data-tag="typescript"] { --tag: #3b7ec8; }
+.tag[data-tag="vite"] { --tag: #a259ff; }
 
 .cta { margin-block-start: 0.6em; }
 .lnk { color: var(--bright); text-decoration: none; border-block-end: 1px solid var(--rule-bright); }
@@ -154,7 +183,7 @@
   caret-color: var(--accent);
 }
 .prompt__input::placeholder { color: var(--fg-ghost); }
-.prompt:focus-within { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 176, 0, 0.22); }
+.prompt:focus-within { border-color: var(--accent); box-shadow: 0 0 10px rgba(99, 177, 127, 0.22); }
 
 .prompt__caret {
   flex: none;

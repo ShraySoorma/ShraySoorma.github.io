@@ -1,4 +1,4 @@
-/* Monochrome terminal with a single amber accent.
+/* Monochrome terminal with a single green accent.
    One place for every colour, size and glow. */
 
 :root {
@@ -18,10 +18,10 @@
   --fg-faint:    #565656;
   --fg-ghost:    #2e2e2e;
 
-  /* The only two hues on the page. Amber marks what is alive or
+  /* The only two hues on the page. A muted green marks what is alive or
      actionable, red marks what broke. Everything else stays grey, which
      is what keeps the amber worth looking at. */
-  --accent:      #ffb000;
+  --accent:      #63b17f;
   --red:         #ff4d4d;
 
   --rule:        #262626;
@@ -30,7 +30,7 @@
   --glow:        0 0 6px rgba(255, 255, 255, 0.32);
   --glow-soft:   0 0 3px rgba(255, 255, 255, 0.20);
   --glow-strong: 0 0 12px rgba(255, 255, 255, 0.45);
-  --glow-accent: 0 0 8px rgba(255, 176, 0, 0.45);
+  --glow-accent: 0 0 8px rgba(99, 177, 127, 0.45);
   --glow-err:    0 0 6px rgba(255, 77, 77, 0.30);
 
   /* type */
