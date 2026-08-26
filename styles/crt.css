@@ -1,16 +1,6 @@
 /* The tube: scanlines, glow, vignette, flicker, and the boot overlay.
    All of it is decorative and all of it switches off under reduced motion. */
 
-.rain {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  inline-size: 100%;
-  block-size: 100%;
-  opacity: 0.34;
-  pointer-events: none;
-}
-
 .crt {
   position: fixed;
   inset: 0;

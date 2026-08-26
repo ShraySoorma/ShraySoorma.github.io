@@ -1,91 +1,10 @@
 /* Decorative only. Everything here is aria-hidden, pauses when the tab is
-   hidden, and switches off entirely under reduced motion or on small screens. */
+   hidden, and switches off entirely under reduced motion. */
 (function () {
   'use strict';
 
-  var raf = 0;
-  var rainOn = false;
-
   function reduced() {
     return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  }
-  function roomy() {
-    return !!(window.matchMedia && window.matchMedia('(min-width: 900px)').matches);
-  }
-
-  /* ---------- matrix rain ---------- */
-
-  /* rows per frame. A full glyph per frame read as static; this drifts. */
-  var SPEED = 0.22;
-
-  var GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>/{}[]$#*+=';
-
-  function initRain(canvas) {
-    if (!canvas || !canvas.getContext) return;
-    var ctx = canvas.getContext('2d', { alpha: true });
-    var cols = [], size = 14, w = 0, h = 0, dpr = 1;
-
-    function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.clientWidth;
-      h = canvas.clientHeight;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.font = size + 'px ui-monospace, monospace';
-      /* cap the column count so a very wide screen does not scale cost linearly */
-      var n = Math.min(Math.ceil(w / size), 120);
-      cols = new Array(n);
-      for (var i = 0; i < n; i++) cols[i] = Math.random() * -60;
-    }
-
-    function frame() {
-      raf = 0;
-      if (!rainOn) return;
-      ctx.fillStyle = 'rgba(5, 5, 5, 0.035)';
-      ctx.fillRect(0, 0, w, h);
-      for (var i = 0; i < cols.length; i++) {
-        var x = i * size;
-        var y = cols[i] * size;
-        var ch = GLYPHS.charAt((Math.random() * GLYPHS.length) | 0);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-        ctx.fillText(ch, x, y);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
-        ctx.fillText(GLYPHS.charAt((Math.random() * GLYPHS.length) | 0), x, y - size * 2);
-        if (y > h && Math.random() > 0.975) cols[i] = 0;
-        cols[i] += SPEED;
-      }
-      raf = window.requestAnimationFrame(frame);
-    }
-
-    function start() {
-      if (rainOn || reduced() || !roomy()) return;
-      rainOn = true;
-      resize();
-      canvas.hidden = false;
-      if (!raf) raf = window.requestAnimationFrame(frame);
-    }
-
-    function stop() {
-      rainOn = false;
-      if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
-      canvas.hidden = true;
-      ctx.clearRect(0, 0, w, h);
-    }
-
-    function sync() { if (reduced() || !roomy()) stop(); else start(); }
-
-    window.addEventListener('resize', function () { if (rainOn) resize(); sync(); }, { passive: true });
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') sync(); else stop();
-    });
-    if (window.matchMedia) {
-      var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (rm.addEventListener) rm.addEventListener('change', sync);
-      else if (rm.addListener) rm.addListener(sync);
-    }
-    sync();
-    window.Ambient.rainOn = function () { return rainOn; };
   }
 
   /* ---------- code stream ---------- */
@@ -138,10 +57,8 @@
 
   window.Ambient = {
     init: function () {
-      initRain(document.getElementById('rain'));
       initStream(document.getElementById('stream'));
       initStats(document.getElementById('stats'));
-    },
-    rainOn: function () { return rainOn; }
+    }
   };
 })();

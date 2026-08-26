@@ -26,7 +26,7 @@ All content lives in `scripts/data.js`. Change the copy there, nothing else.
 
 Commands: `help`, `ls`, `cd`, `cat`, `open`, `whoami`, `arsenal`, `contact`, `neofetch`, `clear`, and one easter egg. Up and down walk history, Tab completes to the longest unambiguous prefix, Ctrl+L clears. `cat charlore` resolves from anywhere, not just from inside `~/projects`.
 
-`scripts/ambient.js` runs the matrix rain, the code stream and the fake process readout. All of it is `aria-hidden`, pauses when the tab is hidden, and switches off under `prefers-reduced-motion` or below 900px. `scripts/boot.js` plays the POST crawl once per session, is skippable with any key, and has a hard ceiling so it can only ever delay the desktop, never prevent it.
+`scripts/ambient.js` runs the code stream and the fake process readout. Both are `aria-hidden`, pause when the tab is hidden, and switch off under `prefers-reduced-motion`. `scripts/boot.js` plays the POST crawl once per session, is skippable with any key, and has a hard ceiling so it can only ever delay the desktop, never prevent it.
 
 Below 900px the side panes drop and the whole thing becomes one flowing column with a sticky prompt.
 
