@@ -1,6 +1,6 @@
 # shraysoorma.github.io
 
-Personal developer page as a monochrome phosphor terminal. A tiled hacker desktop with a prompt you can actually type into. Static, no build step, no dependencies, no frameworks.
+Personal developer page as a monochrome phosphor terminal with a single amber accent. A tiled hacker desktop with a prompt you can actually type into. Static, no build step, no dependencies, no frameworks.
 
 Live at https://shraysoorma.github.io
 
@@ -30,4 +30,6 @@ Commands: `help`, `ls`, `cd`, `cat`, `open`, `whoami`, `arsenal`, `contact`, `ne
 
 Below 900px the side panes drop and the whole thing becomes one flowing column with a sticky prompt.
 
-Styling splits across `styles/`: `tokens.css` holds every colour and size, `layout.css` the pane grid, `terminal.css` the prompt and output blocks, `crt.css` the scanlines and glow. Full phosphor `#ffffff` is reserved for the prompt, headings and accents; body copy uses a dimmed grey so a screen of project text stays readable. With no hue in the palette, err and warn output is marked `[x]` and `[!]` in text.
+Styling splits across `styles/`: `tokens.css` holds every colour and size, `layout.css` the pane grid, `terminal.css` the prompt and output blocks, `crt.css` the scanlines and glow. Full phosphor `#ffffff` is reserved for the prompt, headings and accents; body copy uses a dimmed grey so a screen of project text stays readable. Amber `#ffb000` is spent only on what is alive or actionable: the caret and focus ring, the title-bar LED, the `live` badge, directory entries and hover states. Red `#ff4d4d` is reserved for errors. Everything else stays grey, which is what keeps the amber worth looking at. Warn output is additionally marked `[!]` in text, errors `[x]`, so status never depends on hue alone.
+
+Mobile is handled in the `max-width: 900px` block: the three panes collapse to one column, the prompt sticks to the bottom clear of the home indicator, the input is pinned to 16px so iOS does not zoom on focus, nav entries get 44px touch targets, and `:hover` is gated behind `@media (hover: hover)` so taps do not leave entries lit.

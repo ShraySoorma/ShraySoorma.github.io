@@ -2,7 +2,10 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(255, 176, 0, 0.18);
+}
 
 body {
   margin: 0;
@@ -17,7 +20,7 @@ body {
 
 h1, h2, h3, p, ul, ol, figure, table { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
-button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button { font: inherit; touch-action: manipulation; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 input { font: inherit; color: inherit; }
 table { border-collapse: collapse; }
 
@@ -29,7 +32,7 @@ table { border-collapse: collapse; }
 }
 
 :focus-visible {
-  outline: 2px solid var(--bright);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -41,8 +44,8 @@ table { border-collapse: collapse; }
   z-index: 120;
   padding: 0.5em 1em;
   background-color: var(--bg-raised);
-  border: 1px solid var(--bright);
-  color: var(--bright);
+  border: 1px solid var(--accent);
+  color: var(--accent);
   text-decoration: none;
 }
 .skip-link:focus-visible { translate: -50% 0; }
@@ -82,7 +85,7 @@ table { border-collapse: collapse; }
 .bar__meta { color: var(--fg-faint); font-variant-numeric: tabular-nums; }
 .bar__dots { display: inline-flex; gap: 5px; }
 .bar__dots i { inline-size: 8px; block-size: 8px; border: 1px solid var(--rule-bright); border-radius: 50%; }
-.bar__dots i:last-child { background-color: var(--bright); box-shadow: var(--glow-soft); }
+.bar__dots i:last-child { background-color: var(--accent); box-shadow: var(--glow-accent); }
 
 /* ============ panes ============ */
 .pane {
@@ -133,7 +136,18 @@ table { border-collapse: collapse; }
     grid-template-rows: auto auto auto auto;
     grid-template-areas: "bar" "nav" "main" "ps1";
     block-size: auto;
-    min-block-size: 100svh;
+    /* dvh, not svh: when the keyboard opens the layout tracks the
+       viewport that is actually left, so the prompt is not stranded
+       behind it. */
+    min-block-size: 100dvh;
+    padding-block-end: max(var(--pane-gap), env(safe-area-inset-bottom));
+  }
+
+  /* read at arm's length, not at desk distance */
+  :root {
+    --fs:    0.95rem;
+    --fs-sm: 0.86rem;
+    --fs-xs: 0.74rem;
   }
   .pane--proc { display: none; }
 
@@ -151,10 +165,22 @@ table { border-collapse: collapse; }
   .pane--main { min-block-size: 60svh; }
   .pane--main .pane__body { overflow: visible; }
 
-  /* the prompt stays reachable no matter how long the output runs */
+  /* the prompt stays reachable no matter how long the output runs, and
+     clears the home indicator on a notched phone */
   .prompt {
     position: sticky;
-    inset-block-end: var(--pane-gap);
+    inset-block-end: max(var(--pane-gap), env(safe-area-inset-bottom));
     z-index: 4;
+  }
+
+  /* every nav entry becomes a real finger target. 26px was fine for a
+     mouse and much too small for a thumb. */
+  .pane--nav .pane__body { gap: 0 0.5em; }
+  .ent {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding-inline: 0.45em;
+    margin-inline-start: -0.45em;
   }
 }

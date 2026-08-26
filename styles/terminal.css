@@ -16,9 +16,15 @@
   transition: color var(--dur) var(--ease), text-shadow var(--dur) var(--ease);
 }
 .ent::before { content: "› "; color: var(--fg-faint); }
-.ent:hover, .ent:focus-visible { color: var(--bright); text-shadow: var(--glow); }
-.ent:hover::before, .ent:focus-visible::before { color: var(--bright); }
-.ent--dir { color: var(--cyan); }
+.ent:focus-visible { color: var(--accent); text-shadow: var(--glow-accent); }
+.ent:focus-visible::before { color: var(--accent); }
+/* hover only where a pointer can actually hover. On a phone :hover sticks
+   after the finger lifts, leaving entries lit up at random. */
+@media (hover: hover) {
+  .ent:hover { color: var(--accent); text-shadow: var(--glow-accent); }
+  .ent:hover::before { color: var(--accent); }
+}
+.ent--dir { color: var(--accent); }
 .ent--cmd { color: var(--bright); }
 .ent--cmd::before, .ent--file::before { content: none; }
 
@@ -36,8 +42,8 @@
 .cmd { color: var(--bright); text-shadow: var(--glow-soft); }
 
 .out--dim p { color: var(--fg-dim); }
-.out--err p { color: var(--red); text-shadow: var(--glow-soft); }
-.out--warn p { color: var(--amber); }
+.out--err p { color: var(--red); text-shadow: var(--glow-err); }
+.out--warn p { color: var(--fg-notice); }
 
 /* with no hue left to carry it, err and warn announce themselves in text */
 .out--err p:first-child::before  { content: "[x] "; }
@@ -70,14 +76,14 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.fh__status[data-status="live"]         { color: var(--bright); }
-.fh__status[data-status="in build"]     { color: var(--amber); }
-.fh__status[data-status="daily driver"] { color: var(--cyan); }
+.fh__status[data-status="live"]         { color: var(--accent); text-shadow: var(--glow-accent); }
+.fh__status[data-status="in build"]     { color: var(--fg-notice); }
+.fh__status[data-status="daily driver"] { color: var(--fg-quiet); }
 .fh__issue { color: var(--fg-faint); margin-block: 0.15em 0.7em; }
 
 .lede { color: var(--fg); font-size: var(--fs-md); margin-block-end: 0.8em; }
 .prose p { color: var(--fg-dim); }
-.quote { color: var(--cyan); margin-block-start: 0.7em; }
+.quote { color: var(--fg-quiet); margin-block-start: 0.7em; }
 
 .bul { margin-block: 0.7em; }
 .bul li { color: var(--fg); padding-inline-start: 1.4em; position: relative; }
@@ -98,7 +104,10 @@
 
 .cta { margin-block-start: 0.6em; }
 .lnk { color: var(--bright); text-decoration: none; border-block-end: 1px solid var(--rule-bright); }
-.lnk:hover, .lnk:focus-visible { text-shadow: var(--glow); border-block-end-color: var(--bright); }
+.lnk:focus-visible { color: var(--accent); text-shadow: var(--glow-accent); border-block-end-color: var(--accent); }
+@media (hover: hover) {
+  .lnk:hover { color: var(--accent); text-shadow: var(--glow-accent); border-block-end-color: var(--accent); }
+}
 .lnk__ext { color: var(--fg-faint); }
 
 /* key/value tables */
@@ -142,17 +151,17 @@
   outline: 0;
   color: var(--bright);
   text-shadow: var(--glow-soft);
-  caret-color: var(--bright);
+  caret-color: var(--accent);
 }
 .prompt__input::placeholder { color: var(--fg-ghost); }
-.prompt:focus-within { border-color: var(--bright); box-shadow: 0 0 10px rgba(255, 255, 255, 0.14); }
+.prompt:focus-within { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 176, 0, 0.22); }
 
 .prompt__caret {
   flex: none;
   inline-size: 0.6em;
   block-size: 1.05em;
-  background-color: var(--bright);
-  box-shadow: var(--glow);
+  background-color: var(--accent);
+  box-shadow: var(--glow-accent);
   animation: blink 1.05s steps(1) infinite;
 }
 .prompt:focus-within .prompt__caret { display: none; }
@@ -191,4 +200,24 @@
 @media (prefers-reduced-motion: reduce) {
   .stream__reel { animation: none; }
   .prompt__caret { animation: none; }
+}
+
+/* ============ mobile ============ */
+@media (max-width: 900px) {
+  /* iOS zooms the whole page when a focused input is under 16px. On a
+     page whose entire point is typing, every tap threw the layout off. */
+  .prompt__input { font-size: 16px; }
+  .prompt { padding-block: 0.6em; }
+
+  /* links are tapped, so give them a finger-sized target too */
+  .lnk { display: inline-block; padding-block: 0.35em; }
+
+  /* the neofetch table sizes to its longest value, which on a 320px
+     phone runs past the edge. Pin the key column and let values wrap. */
+  .kv { inline-size: 100%; table-layout: fixed; }
+  .kv .k { inline-size: 10.5ch; padding-inline-end: 0.9em; }
+  .kv .v { overflow-wrap: anywhere; }
+
+  /* long URLs and handles break rather than widen the page */
+  .lnk, .prose p, .lede { overflow-wrap: anywhere; }
 }

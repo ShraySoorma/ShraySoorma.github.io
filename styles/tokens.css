@@ -1,4 +1,5 @@
-/* Monochrome terminal. One place for every colour, size and glow. */
+/* Monochrome terminal with a single amber accent.
+   One place for every colour, size and glow. */
 
 :root {
   /* the tube */
@@ -7,18 +8,21 @@
   --bg-raised:   #121212;
   --bg-select:   #2a2a2a;
 
-  /* phosphor. Full brightness is for the prompt, headings and accents.
-     Long-form copy uses --fg, which still clears AA on --bg. */
+  /* the grey ramp. Full brightness is for the prompt, headings and
+     accents. Long-form copy uses --fg, which still clears AA on --bg. */
   --bright:      #ffffff;
   --fg:          #c8c8c8;
+  --fg-notice:   #bdbdbd;
+  --fg-quiet:    #9a9a9a;
   --fg-dim:      #8a8a8a;
   --fg-faint:    #565656;
   --fg-ghost:    #2e2e2e;
 
-  /* status now reads by brightness and a text marker, not by hue */
-  --amber:       #bdbdbd;
-  --cyan:        #9a9a9a;
-  --red:         #ffffff;
+  /* The only two hues on the page. Amber marks what is alive or
+     actionable, red marks what broke. Everything else stays grey, which
+     is what keeps the amber worth looking at. */
+  --accent:      #ffb000;
+  --red:         #ff4d4d;
 
   --rule:        #262626;
   --rule-bright: #4a4a4a;
@@ -26,6 +30,8 @@
   --glow:        0 0 6px rgba(255, 255, 255, 0.32);
   --glow-soft:   0 0 3px rgba(255, 255, 255, 0.20);
   --glow-strong: 0 0 12px rgba(255, 255, 255, 0.45);
+  --glow-accent: 0 0 8px rgba(255, 176, 0, 0.45);
+  --glow-err:    0 0 6px rgba(255, 77, 77, 0.30);
 
   /* type */
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
