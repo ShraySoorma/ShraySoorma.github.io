@@ -92,6 +92,7 @@
       var rows = [
         ['user',    (window.SITE && window.SITE.name) || 'shray'],
         ['role',    a.tagline || ''],
+        ['work',    a.work || ''],
         ['shell',   'soorma-sh 1.0'],
         ['projects', count + ' production shipped, more under NDA'],
         ['stack',   'typescript, rust, swift, sql'],

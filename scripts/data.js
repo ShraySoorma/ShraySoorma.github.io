@@ -21,15 +21,15 @@ window.PROJECTS = [
     "id": "charlore",
     "name": "Charlore",
     "issue": "The Episode Factory",
-    "logline": "Serialized AI video platform. Define a series once, then generate full episodes, script to 9:16 render, for TikTok and Shorts.",
+    "logline": "Serialized AI video platform. Define a series once, then generate full episodes, script to finished render, in any aspect ratio.",
     "body": [
-      "A series bible locks the world, cast, and visual style, then each episode flows through script, scene board, reference-consistent character images, Kling image-to-video clips, and ElevenLabs voiceover before a QStash-queued ffmpeg worker assembles the final vertical render.",
+      "A series bible locks the world, cast, and visual style, then each episode flows through script, scene board, reference-consistent character images, Kling image-to-video clips, and ElevenLabs voiceover before a QStash-queued ffmpeg worker assembles the final render.",
       "Workspaces carry owner, admin, and member roles with invite links, generation is metered in credits, and Stripe runs Free, Creator, and Studio plans plus one-time credit packs.",
       "Finished episodes upload to TikTok as drafts, and a SwiftUI iOS companion app works as a studio remote over Bearer-token auth."
     ],
     "highlights": [
       "Pluggable providers: OpenAI, Anthropic, fal Kling, ElevenLabs",
-      "QStash-queued ffmpeg worker renders final 9:16 episodes",
+      "QStash-queued ffmpeg worker renders finished episodes in any aspect ratio",
       "Stripe plans plus credit packs meter video, image, and voice",
       "TikTok draft upload and a SwiftUI iOS studio remote"
     ],
@@ -50,6 +50,35 @@ window.PROJECTS = [
     "burst": "BOOM",
     "status": "live",
     "link": "https://charlore.ai",
+    "repoPublic": false
+  },
+  {
+    "id": "dezignrco",
+    "name": "dezignrco",
+    "issue": "The Studio",
+    "logline": "Web design studio. Client sites designed, built, and shipped, plus the in-house tooling that runs the studio.",
+    "body": [
+      "Sites are assembled from a component and template system, themed per client, and deployed as static builds with managed image handling, uptime checks, and incident history."
+    ],
+    "highlights": [
+      "Client sites designed, built, and deployed end to end",
+      "In-house builder and template system behind the work",
+      "Uptime monitoring with incident history per site",
+      "Client portal for review, comments, and sign off"
+    ],
+    "stack": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Node.js",
+      "Prisma",
+      "Cloudflare Pages",
+      "Cloudinary",
+      "Tailwind CSS"
+    ],
+    "burst": "ZAP",
+    "status": "live",
+    "link": "https://dezignrco.com",
     "repoPublic": false
   },
   {
@@ -87,40 +116,12 @@ window.PROJECTS = [
     "link": null,
     "repoPublic": false,
     "linkNote": "Launching soon"
-  },
-  {
-    "id": "dezignrco",
-    "name": "dezignrco",
-    "issue": "The Studio",
-    "logline": "Web design studio. Client sites designed, built, and shipped, plus the in-house tooling that runs the studio.",
-    "body": [
-      "Sites are assembled from a component and template system, themed per client, and deployed as static builds with managed image handling, uptime checks, and incident history."
-    ],
-    "highlights": [
-      "Client sites designed, built, and deployed end to end",
-      "In-house builder and template system behind the work",
-      "Uptime monitoring with incident history per site",
-      "Client portal for review, comments, and sign off"
-    ],
-    "stack": [
-      "React",
-      "TypeScript",
-      "Vite",
-      "Node.js",
-      "Prisma",
-      "Cloudflare Pages",
-      "Cloudinary",
-      "Tailwind CSS"
-    ],
-    "burst": "ZAP",
-    "status": "live",
-    "link": "https://dezignrco.com",
-    "repoPublic": false
   }
 ];
 
 window.AUTHOR = {
   "tagline": "Full-stack engineer who ships whole products solo",
+  "work": "SWE @Kyndryl",
   "origin": [
     "Shray builds complete products alone: web apps, native desktop and iOS clients, AI pipelines, and the billing that makes them businesses.",
     "The same playbook repeats across his work, a typed TypeScript stack, a real relational schema, and automation for everything repetitive.",
