@@ -90,7 +90,7 @@
       (a.epigraph && a.epigraph.text
         ? '<figure class="epi">' +
             '<blockquote class="epi__text">' + esc(a.epigraph.text) + '</blockquote>' +
-            '<figcaption class="epi__by">&mdash; ' + esc(a.epigraph.author || '') +
+            '<figcaption class="epi__by">-- ' + esc(a.epigraph.author || '') +
               (a.epigraph.source ? ' <span class="epi__src">' + esc(a.epigraph.source) + '</span>' : '') +
             '</figcaption>' +
           '</figure>'
