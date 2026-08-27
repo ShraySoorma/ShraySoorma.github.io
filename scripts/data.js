@@ -39,17 +39,6 @@ window.EXPERIENCE = [
     ]
   },
   {
-    "company": "Confidential client",
-    "title": "Software Engineer (Contract)",
-    "dates": "Sep 2025 - Jan 2026",
-    "bullets": [
-      "Architected an AI-driven lead nurturing engine using OpenAI API, LangChain, and LangGraph to generate personalized follow-up messages, increasing lead response rates by 35% and processing 50,000+ automated messages monthly.",
-      "Engineered a distributed workflow orchestration system using Restate to manage multi-stage automation pipelines with fault-tolerant state management, reducing missed appointments by 60% across 10,000+ scheduled workflows.",
-      "Built a real-time CSV import pipeline with automatic header detection and intelligent column mapping (AWS S3, React Hook Form, Zod), cutting manual data entry time by 80% across 100,000+ lead records.",
-      "Created a subscription access control system with Redis caching (Stripe API, Fastify, React), cutting auth latency by 200ms."
-    ]
-  },
-  {
     "company": "IBM / Kyndryl Inc.",
     "title": "Software Engineer Intern (2x)",
     "dates": "Summers 2022 & 2023",

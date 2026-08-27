@@ -120,9 +120,7 @@
       return '<li class="xp__role">' +
         '<div class="xp__head">' +
           '<span class="xp__title">' + esc(r.title) + '</span>' +
-          '<span class="xp__co">' + esc(r.company) +
-            (r.note ? ' <span class="xp__note">(' + esc(r.note) + ')</span>' : '') +
-          '</span>' +
+          '<span class="xp__co">' + esc(r.company) + '</span>' +
           '<span class="xp__when">' + esc(r.dates) + '</span>' +
         '</div>' +
         '<ul class="bul">' + bullets + '</ul>' +
