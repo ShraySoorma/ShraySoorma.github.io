@@ -32,6 +32,9 @@
       file(tree, 'about.md', 'about', window.AUTHOR);
       file(tree, 'arsenal.txt', 'arsenal', window.AUTHOR.arsenal);
     }
+    if (window.EXPERIENCE) {
+      file(tree, 'experience.txt', 'experience', window.EXPERIENCE);
+    }
     if (window.SITE) {
       file(tree, 'contact.txt', 'contact', window.SITE.links);
     }

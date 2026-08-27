@@ -110,6 +110,34 @@
     return block('out--arsenal', '<div class="grps">' + cols + '</div>');
   }
 
+  /* ---------- experience ---------- */
+
+  function experience(roles) {
+    var items = (roles || []).map(function (r) {
+      var bullets = (r.bullets || []).map(function (b) {
+        return '<li>' + esc(b) + '</li>';
+      }).join('');
+      return '<li class="xp__role">' +
+        '<div class="xp__head">' +
+          '<span class="xp__title">' + esc(r.title) + '</span>' +
+          '<span class="xp__co">' + esc(r.company) +
+            (r.note ? ' <span class="xp__note">(' + esc(r.note) + ')</span>' : '') +
+          '</span>' +
+          '<span class="xp__when">' + esc(r.dates) + '</span>' +
+        '</div>' +
+        '<ul class="bul">' + bullets + '</ul>' +
+      '</li>';
+    }).join('');
+
+    var e = window.EDUCATION;
+    var edu = e
+      ? '<p class="xp__edu">' + esc(e.school) + ' / ' + esc(e.degree) +
+        (e.note ? ' / ' + esc(e.note) : '') + '</p>'
+      : '';
+
+    return block('out--experience', '<ol class="xp">' + items + '</ol>' + edu);
+  }
+
   /* ---------- contact ---------- */
 
   function contact(links) {
@@ -140,6 +168,7 @@
 
   window.Render = {
     ls: ls, project: project, about: about, arsenal: arsenal, contact: contact,
+    experience: experience,
     help: help, text: text, error: error, raw: raw, echo: echo, esc: esc, link: link
   };
 })();

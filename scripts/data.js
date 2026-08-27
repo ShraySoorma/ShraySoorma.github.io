@@ -16,6 +16,55 @@ window.SITE = {
   ]
 };
 
+window.EXPERIENCE = [
+  {
+    "company": "IBM / Kyndryl Inc.",
+    "title": "Senior Software Engineer",
+    "dates": "Jan 2026 - Current",
+    "bullets": [
+      "Own the centralized payment engine behind all ADOT MVD transaction processing (1M+ transactions monthly), covering transaction orchestration, secure API design, and observability improvements that reduced payment failures across citizen-facing services.",
+      "Led the migration of legacy ADOT applications to modern .NET, re-architecting aging systems into maintainable, cloud-ready services while preserving continuity for live citizen-facing workflows.",
+      "Designed, built, and shipped 4+ client-facing web applications end-to-end, owning architecture, API design, and deployment for high-traffic state services.",
+      "Lead technical design reviews and mentor junior engineers across web application teams, setting standards for API design, testing, and release practices.",
+      "Drove adoption of automated regression testing (Playwright, GitHub Actions, Vitest) across client-facing applications, reducing production regressions by 45% and improving release confidence in high-traffic workflows."
+    ]
+  },
+  {
+    "company": "IBM / Kyndryl Inc.",
+    "title": "Software Engineer",
+    "dates": "Aug 2023 - Dec 2025",
+    "bullets": [
+      "Designed and implemented scalable AWS cloud architectures (EC2, S3, Lambda, RDS) with cross-functional teams, supporting business-critical applications serving 100K+ users while optimizing for performance, security, and cost.",
+      "Built and deployed RESTful APIs using Node.js, Express.js, and AWS API Gateway connecting mobile and web clients across multiple Kyndryl solutions with secure, reliable data exchange."
+    ]
+  },
+  {
+    "company": "Confidential client",
+    "title": "Software Engineer (Contract)",
+    "dates": "Sep 2025 - Jan 2026",
+    "bullets": [
+      "Architected an AI-driven lead nurturing engine using OpenAI API, LangChain, and LangGraph to generate personalized follow-up messages, increasing lead response rates by 35% and processing 50,000+ automated messages monthly.",
+      "Engineered a distributed workflow orchestration system using Restate to manage multi-stage automation pipelines with fault-tolerant state management, reducing missed appointments by 60% across 10,000+ scheduled workflows.",
+      "Built a real-time CSV import pipeline with automatic header detection and intelligent column mapping (AWS S3, React Hook Form, Zod), cutting manual data entry time by 80% across 100,000+ lead records.",
+      "Created a subscription access control system with Redis caching (Stripe API, Fastify, React), cutting auth latency by 200ms."
+    ]
+  },
+  {
+    "company": "IBM / Kyndryl Inc.",
+    "title": "Software Engineer Intern (2x)",
+    "dates": "Summers 2022 & 2023",
+    "bullets": [
+      "Built the React interface for an internal generative AI tool with an Nginx proxy on GCP (25% server performance gain), and implemented semantic search for an employee search engine using sentence-transformer NLP models."
+    ]
+  }
+];
+
+window.EDUCATION = {
+  "school": "Arizona State University",
+  "degree": "BS Computer Science",
+  "note": "GPA 3.7"
+};
+
 window.PROJECTS = [
   {
     "id": "charlore",

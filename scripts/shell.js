@@ -15,6 +15,7 @@
     { cmd: 'cd <dir>',  desc: 'change directory, cd .. to go up', run: 'cd projects' },
     { cmd: 'cat <file>',desc: 'read a file, tab completes', run: 'cat projects/charlore.md' },
     { cmd: 'whoami',    desc: 'who is running this' },
+    { cmd: 'experience',desc: 'where I have worked' },
     { cmd: 'arsenal',   desc: 'the stack, grouped' },
     { cmd: 'contact',   desc: 'how to reach me' },
     { cmd: 'neofetch',  desc: 'system summary' },
@@ -38,6 +39,7 @@
     if (node.kind === 'project') return window.Render.project(node.payload);
     if (node.kind === 'about')   return window.Render.about(node.payload);
     if (node.kind === 'arsenal') return window.Render.arsenal(node.payload);
+    if (node.kind === 'experience') return window.Render.experience(node.payload);
     if (node.kind === 'contact') return window.Render.contact(node.payload);
     return window.Render.error('cat: ' + node.name + ': unknown format');
   }
@@ -74,6 +76,11 @@
     whoami: function () {
       var n = window.FS.resolve(window.FS.root(), 'about.md');
       return n ? openFile(n) : window.Render.error('whoami: no record');
+    },
+
+    experience: function () {
+      var n = window.FS.resolve(window.FS.root(), 'experience.txt');
+      return n ? openFile(n) : window.Render.error('experience: not found');
     },
 
     arsenal: function () {
