@@ -32,7 +32,7 @@
       file(tree, 'about.md', 'about', window.AUTHOR);
       file(tree, 'arsenal.txt', 'arsenal', window.AUTHOR.arsenal);
     }
-    if (window.EXPERIENCE) {
+    if (window.EXPERIENCE && window.SHOW_EXPERIENCE) {
       file(tree, 'experience.txt', 'experience', window.EXPERIENCE);
     }
     if (window.SITE) {

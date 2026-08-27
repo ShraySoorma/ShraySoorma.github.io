@@ -23,6 +23,10 @@
     { cmd: 'help',      desc: 'this list' }
   ];
 
+  if (!window.SHOW_EXPERIENCE) {
+    HELP = HELP.filter(function (h) { return h.cmd !== 'experience'; });
+  }
+
   function print(node) {
     if (!node || !out) return;
     out.appendChild(node);
@@ -216,6 +220,8 @@
     histIndex += 1;
     return history[histIndex];
   }
+
+  if (!window.SHOW_EXPERIENCE) { delete CMDS.experience; }
 
   window.Shell = {
     init: function (outEl, onCwd) {

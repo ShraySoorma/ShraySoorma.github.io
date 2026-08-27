@@ -48,6 +48,11 @@ window.EXPERIENCE = [
   }
 ];
 
+/* Hidden for now. Flip to true to put experience.txt back in the nav, ls,
+   help and tab completion. The roles below stay here either way, and the
+   nav entry in index.html needs uncommenting too. */
+window.SHOW_EXPERIENCE = false;
+
 window.EDUCATION = {
   "school": "Arizona State University",
   "degree": "BS Computer Science",
@@ -176,8 +181,11 @@ window.AUTHOR = {
     "Languages": [
       "TypeScript",
       "JavaScript",
+      "Python",
       "Swift",
       "Rust",
+      "C#",
+      ".NET",
       "SQL"
     ],
     "Frontend": [
@@ -188,22 +196,33 @@ window.AUTHOR = {
       "shadcn/ui",
       "Radix UI",
       "Zustand",
-      "Recharts"
+      "React Hook Form",
+      "Zod",
+      "Framer Motion",
+      "Recharts",
+      "Socket.io"
     ],
     "Backend and data": [
       "Node.js",
       "Express",
+      "Fastify",
+      "ASP.NET",
       "Prisma",
       "Drizzle ORM",
       "PostgreSQL",
       "PostGIS",
+      "MySQL",
+      "Redis",
       "SQLite",
-      "Supabase"
+      "Supabase",
+      "WebSockets"
     ],
     "AI and media": [
       "Claude API",
       "OpenAI API",
       "Gemini",
+      "LangChain",
+      "LangGraph",
       "fal.ai",
       "ElevenLabs",
       "ffmpeg",
@@ -217,13 +236,18 @@ window.AUTHOR = {
       "WebContainers"
     ],
     "Infra and tooling": [
+      "AWS",
+      "Docker",
+      "Kubernetes",
       "Cloudflare Pages",
       "Fly.io",
       "Vercel",
+      "GitHub Actions",
       "Stripe",
       "QStash",
       "Resend",
       "Playwright",
+      "Vitest",
       "launchd"
     ]
   }
