@@ -1,0 +1,24 @@
+{
+  "models": "models/SOURCES.json",
+  "environment": {
+    "source": "https://polyhaven.com/a/studio_small_09",
+    "file": "studio-light.hdr",
+    "license": "CC0 1.0",
+    "resolution": "1k"
+  },
+  "portrait": {
+    "reference": "User-supplied portrait, used with instruction to build a personal miniature.",
+    "asset": "avatar/shray-avatar.glb",
+    "method": "Portrait texture mapped to a measured front facial surface; side and rear volumes, hair, body, and clothes inferred.",
+    "limitations": "Not a full scan or an anatomically calibrated reconstruction.",
+    "continuous_body": {
+      "asset": "avatar/body-surfaces.json",
+      "method": "Connected remeshed arm and garment surfaces with normalized deformation weights; separate hidden compound collision geometry keeps the figure one physical object."
+    }
+  },
+  "facial_surface_preprocessing": {
+    "source": "https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker",
+    "execution": "Local preprocessing only; no runtime model or remote image request."
+  },
+  "shared_sources": "../world/SOURCES.json"
+}

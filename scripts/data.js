@@ -62,6 +62,7 @@ window.EDUCATION = {
 window.PROJECTS = [
   {
     "id": "charlore",
+    "role": "Founder",
     "name": "Charlore",
     "issue": "The Episode Factory",
     "logline": "Serialized AI video platform. Define a series once, then generate full episodes, script to finished render, in any aspect ratio.",
@@ -97,6 +98,7 @@ window.PROJECTS = [
   },
   {
     "id": "dezignrco",
+    "role": "Founder",
     "name": "dezignrco",
     "issue": "The Studio",
     "logline": "Web design studio. Client sites designed, built, and shipped, plus the in-house tooling that runs the studio.",

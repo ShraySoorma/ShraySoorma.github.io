@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f5">
+  <meta name="description" content="Welcome to Shray Soorma’s room. Look around, play, and discover the work in the books.">
+  <title>Shray Soorma — Welcome to my room</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preload" href="assets/ui/geist-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/ui/components.css">
+  <link rel="stylesheet" href="styles/personal-studio.css?v=founder-21">
+  <script type="importmap">{"imports":{"three":"./assets/world/vendor/three/three.module.js"}}</script>
+  <script src="scripts/data.js?v=founder-21" defer></script>
+  <script src="scripts/studio-app.js?v=founder-21" type="module"></script>
+</head>
+<body data-room-state="welcome">
+  <section id="room-welcome" role="main" aria-labelledby="welcome-title">
+    <div class="welcome-content">
+      <p class="welcome-name">Shray Soorma</p>
+      <h1 id="welcome-title">Welcome to <span>my room</span></h1>
+      <p class="welcome-description">Look around. My work is in the books.</p>
+      <wa-button id="enter-room" variant="brand" size="large" disabled>
+        <span data-label>Enter the room</span>
+        <wa-icon slot="end" src="assets/ui/icons/arrow-right.svg"></wa-icon>
+      </wa-button>
+      <div id="studio-loading" class="welcome-progress" role="status" aria-busy="true">
+        <wa-progress-bar id="load-progress" value="0" label="Loading the room"></wa-progress-bar>
+        <p id="load-copy" aria-live="polite">Getting the room ready…</p>
+      </div>
+      <wa-button id="fallback-work" appearance="plain" hidden>Open the bookshelf <wa-icon slot="end" src="assets/ui/icons/arrow-right.svg"></wa-icon></wa-button>
+      <p id="welcome-error" hidden role="alert"></p>
+    </div>
+  </section>
+
+  <header class="room-header room-chrome" inert>
+    <wa-button id="studio-home" appearance="plain" size="small">Shray’s room</wa-button>
+  </header>
+  <main id="studio-stage" aria-label="Shray’s interactive room" inert><h1 class="sr-only">Shray’s room</h1>
+    <section id="studio-error" hidden><h1>The room couldn’t load.</h1><p>You can still read the books.</p></section>
+  </main>
+  <wa-button id="back-to-studio" class="back-to-studio room-chrome" appearance="plain" size="small" inert><wa-icon slot="start" src="assets/ui/icons/arrow-right.svg" flip="horizontal"></wa-icon>The room</wa-button>
+  <footer class="quiet-footer room-chrome" inert>
+    <p>Click a book to read. Drag to play.</p>
+    <div class="quiet-actions">
+      <wa-button id="studio-reset" appearance="outlined" size="small"><wa-icon slot="start" src="assets/ui/icons/rotate-ccw.svg"></wa-icon><span data-label>Tidy up</span></wa-button>
+      <wa-dropdown id="room-options" placement="top-end" distance="10">
+        <wa-button id="options-trigger" slot="trigger" appearance="outlined" size="small"><wa-icon src="assets/ui/icons/ellipsis.svg"></wa-icon><span class="sr-only">Room options</span></wa-button>
+        <wa-dropdown-item id="work-open" value="books"><wa-icon slot="icon" src="assets/ui/icons/book-open.svg"></wa-icon><span data-label>Bookshelf</span></wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item data-shot="studio" type="checkbox" checked><span data-label>Whole room</span></wa-dropdown-item>
+        <wa-dropdown-item data-shot="portrait" type="checkbox"><span data-label>Closer</span></wa-dropdown-item>
+        <wa-dropdown-item data-shot="workbench" type="checkbox"><span data-label>Desk</span></wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item id="routine-toggle" type="checkbox" checked data-pressed="true"><span data-label>Routine on</span></wa-dropdown-item>
+        <wa-dropdown-item id="motion-pause" type="checkbox" data-pressed="false"><span data-label>Pause</span></wa-dropdown-item>
+        <wa-dropdown-item id="studio-evening" type="checkbox" data-pressed="false"><span data-label>Evening</span></wa-dropdown-item>
+        <wa-dropdown-item id="studio-quality" type="checkbox" checked data-pressed="true"><span data-label>Native quality</span></wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item id="zoom-out"><wa-icon slot="icon" src="assets/ui/icons/zoom-out.svg"></wa-icon><span data-label>Zoom out</span></wa-dropdown-item>
+        <wa-dropdown-item id="zoom-fit"><wa-icon slot="icon" src="assets/ui/icons/maximize-2.svg"></wa-icon><span data-label>Fit the room</span></wa-dropdown-item>
+        <wa-dropdown-item id="zoom-in"><wa-icon slot="icon" src="assets/ui/icons/zoom-in.svg"></wa-icon><span data-label>Zoom in</span></wa-dropdown-item>
+        <wa-divider></wa-divider>
+        <wa-dropdown-item id="help-open"><wa-icon slot="icon" src="assets/ui/icons/circle-help.svg"></wa-icon><span data-label>How to play</span></wa-dropdown-item>
+      </wa-dropdown>
+    </div>
+  </footer>
+  <div class="toast" id="studio-toast" hidden role="status"></div>
+
+  <wa-dialog id="work-dialog" label="Bookshelf" light-dismiss>
+    <span id="work-title" slot="label">Bookshelf</span>
+    <p class="reader-caption" id="work-kicker">From the bookshelf</p>
+    <div id="work-content"></div>
+  </wa-dialog>
+  <wa-dialog id="about-dialog" label="Shray Soorma" light-dismiss>
+    <p class="reader-caption">Personal notes</p>
+    <div id="about-content"></div>
+    <wa-button slot="footer" id="portrait-open" appearance="outlined">See the miniature<wa-icon slot="end" src="assets/ui/icons/arrow-right.svg"></wa-icon></wa-button>
+  </wa-dialog>
+  <wa-dialog id="help-dialog" label="How to play" light-dismiss>
+    <dl class="help-list">
+      <div><dt>Look around</dt><dd>Drag an empty area to turn the room. Scroll to zoom. On touch, use two fingers.</dd></div>
+      <div><dt>Pick something up</dt><dd>Drag an object. Flick before releasing to throw it. The rug folds, and grabbing me activates a ragdoll.</dd></div>
+      <div><dt>Read the books</dt><dd>Click a book for the work behind it. The notebook holds my personal notes.</dd></div>
+      <div><dt>Put things back</dt><dd>Tidy up restores the room and resumes my routine.</dd></div>
+    </dl>
+    <p class="keyboard-help">1–3: camera · Space: pause · R: tidy up</p>
+    <wa-button slot="footer" id="help-play" variant="brand">Got it</wa-button>
+  </wa-dialog>
+  <noscript><div class="static-fallback"><h1>Welcome to my room</h1><p>I’m Shray Soorma. Enable JavaScript to explore the room, or visit my work below.</p><p><a href="https://charlore.ai">Charlore</a> · <a href="https://dezignrco.com">dezignrco</a> · <a href="mailto:shraysoorma27@gmail.com">Get in touch</a></p></div><style>#room-welcome,.room-chrome,main{display:none!important}</style></noscript>
+</body>
+</html>
